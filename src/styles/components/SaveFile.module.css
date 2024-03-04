@@ -1,0 +1,160 @@
+
+/* ______________________________________________________________________________________ */
+/* ===== saveFile  ===== */
+
+.saveFile{
+    border-width: 5px;
+    border-radius: 25px;
+    width: 100%;
+    min-height: 220px;
+    transition: all 0.5s ease-out;
+}
+
+.saveFileLink:hover .saveFile,
+.saveFileLink:focus .saveFile{
+    scale: 0.9;
+}
+
+
+
+/* ______________________________________________________________________________________ */
+/* ===== content  ===== */
+
+.saveFile .content{
+    width: 100%;
+    display: grid;
+}
+
+.saveFile .content.large{
+    /* grid-template-columns: repeat(4, minmax(0, 1fr)); */
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.saveFile .content.medium{
+    display: none;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+}
+
+.saveFile .content.small{
+    display: none;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+@media only screen and (max-width: 987px){
+    .saveFile .content.large{
+        display: none;
+    }
+    .saveFile .content.medium{
+        display: grid;
+    }
+    .saveFile .content.medium .item{
+        min-height: unset;
+    }
+}
+
+@media only screen and (max-width: 652px){
+    .saveFile .content.medium{
+        display: none;
+    }
+    .saveFile .content.small{
+        display: grid;
+    }
+    .saveFile .content.small .item{
+        min-height: unset;
+    }
+}
+
+
+
+/* ______________________________________________________________________________________ */
+/* ===== item ===== */
+
+.saveFile .content .item{
+    padding-top: 5px;
+    padding-bottom: 5px;
+    font-size: 1.25rem;
+    min-height: 70px;
+}
+
+
+
+/* ______________________________________________________________________________________ */
+/* ===== item large ===== */
+
+/* .saveFile .content.large .item.firstCol{
+    padding-left: 20px;
+}
+
+.saveFile .content.large .item.secondCol{
+    padding-right: 10px;
+}
+
+.saveFile .content.large .item.thirdCol{
+    padding-left: 10px;
+}
+
+.saveFile .content.large .item.forthCol{
+    padding-right: 20px;
+} */
+
+.saveFile .content.large .item.firstCol{
+    padding-left: 20px;
+}
+.saveFile .content.large .item.thirdCol{
+    padding-right: 20px;
+}
+
+
+
+/* ______________________________________________________________________________________ */
+/* ===== item medium ===== */
+
+.saveFile .content.medium .item.firstCol{
+    padding-left: 20px;
+    grid-column-start: 1;
+    grid-column-end: span 3;
+}
+
+.saveFile .content.medium .item.secondCol{
+    padding-right: 20px;
+    grid-column-start: 4;
+    grid-column-end: span 3;
+}
+
+
+.saveFile .content.medium .item.firstColComponents{
+    padding-left: 20px;
+    grid-column-start: 1;
+    grid-column-end: span 2;
+}
+.saveFile .content.medium .item.secondColComponents{
+    grid-column-start: 3;
+    grid-column-end: span 2;
+}
+.saveFile .content.medium .item.thirdColComponents{
+    padding-right: 20px;
+    grid-column-start: 5;
+    grid-column-end: span 2;
+}
+
+
+
+/* ______________________________________________________________________________________ */
+/* ===== item small ===== */
+
+.saveFile .content.small .item.firstCol{
+    padding-left: 20px;
+}
+
+.saveFile .content.small .item.secondCol{
+    padding-right: 20px;
+}
+
+.saveFile .content.small .item.regularCol{
+    grid-column-start: 1;
+    grid-column-end: span 2;
+}
+
+
+/* ______________________________________________________________________________________ */
+/* ===== OTHER ===== */

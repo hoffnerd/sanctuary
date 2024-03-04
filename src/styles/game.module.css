@@ -1,0 +1,96 @@
+
+
+
+/* ______________________________________________________________________________________ */
+/* ===== Game Grid ===== */
+
+.gameGrid{
+    --corePadding: 1rem;
+    
+    display: grid;
+    padding-left: var(--corePadding);
+    padding-right: var(--corePadding);
+}
+
+.gameGrid.desktop{
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.gameGrid.tablet{
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.gameGrid.mobile{
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+}
+
+
+
+/* ______________________________________________________________________________________ */
+/* ===== Columns ===== */
+
+.gameGrid .column{
+    padding: var(--corePadding);
+}
+
+.gameGrid .columnLeft{
+    grid-column-start: 1;
+    grid-column-end: span 2;
+}
+
+
+/* ______________________________________________________________________________________ */
+/* ===== Sections ===== */
+
+.gameGrid .panelSpacing{
+    padding: var(--corePadding);
+}
+
+.gameGrid .panel {
+    --_fullHeight: var(--fullHeight, 90vh);
+    --_height: var(--height, var(--_fullHeight));
+
+    border-width: 5px;
+    border-radius: 25px;
+    overflow: hidden;
+}
+
+@media only screen and (max-height: 840px){
+    .gameGrid .panel{
+        --_fullHeight: var(--fullHeight, 85vh);
+    }
+}
+@media only screen and (max-height: 560px){
+    .gameGrid .panel{
+        --_fullHeight: var(--fullHeight, 80vh);
+    }
+}
+@media only screen and (max-height: 420px){
+    .gameGrid .panel{
+        --_fullHeight: var(--fullHeight, 75vh);
+    }
+}
+@media only screen and (max-height: 340px){
+    .gameGrid .panel{
+        --_fullHeight: var(--fullHeight, 70vh);
+    }
+}
+
+.gameGrid .panel .innerPanel{
+    
+    overflow: auto;
+    height: var(--_height);
+    padding: var(--corePadding);
+}
+
+.gameGrid .panel.half{
+    --height: calc( (var(--_fullHeight) / 2) - (var(--corePadding) * 1.25) )
+}
+
+.gameGrid .panel.fraction_1_3rd{
+    --height: calc( (var(--_fullHeight) / 3) - (var(--corePadding) * 1.25) )
+}
+
+.gameGrid .panel.fraction_2_3rd{
+    --height: calc( ((var(--_fullHeight) / 3) * 2) - (var(--corePadding) * 1.25) )
+}
