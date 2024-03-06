@@ -7,6 +7,7 @@ import { useReadSaveFile } from "@/rQuery/hooks/saveFile";
 // Data------------------------------------------------------------------------------
 import { items } from "@/data/game/items";
 // Components------------------------------------------------------------------------
+import { Card, CardDescription, CardHeader } from "@/components/shadcn/ui/card"
 // Other-----------------------------------------------------------------------------
 import { isArray, isObj } from "@/util";
 
@@ -38,10 +39,19 @@ export default function Inventory({}){
 
     //______________________________________________________________________________________
     // ===== Render Functions =====
+
     const renderItems = () => {
         if(isArray(inventory)) return inventory.map(itemId => {
             const item = items[itemId];
-            return <p key={itemId}>{item.title}</p>
+            return (
+                <div key={itemId} className="p-2">                    
+                    <Card className="w-full text-center">
+                        <CardHeader>
+                            <CardDescription textMuted={!item.title}>{item.title}</CardDescription>
+                        </CardHeader>
+                    </Card>
+                </div>
+            )
         });
         return "Nothing in your inventory...";
     }

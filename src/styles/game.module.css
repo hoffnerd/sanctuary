@@ -13,6 +13,7 @@
 }
 
 .gameGrid.desktop{
+    grid-template-rows: repeat(2, minmax(0, 1fr));
     grid-template-columns: repeat(4, minmax(0, 1fr));
 }
 
@@ -31,11 +32,15 @@
 
 .gameGrid .column{
     padding: var(--corePadding);
+    grid-row-start: 1;
+    grid-row-end: span 2;
 }
 
 .gameGrid .columnLeft{
     grid-column-start: 1;
     grid-column-end: span 2;
+    grid-row-start: 1;
+    grid-row-end: span 2;
 }
 
 

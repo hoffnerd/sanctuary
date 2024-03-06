@@ -1,3 +1,4 @@
+"use client"
 
 // Packages--------------------------------------------------------------------------
 // Styles----------------------------------------------------------------------------
@@ -15,17 +16,6 @@ export default function NarrativeDisplay({ narrativeObj, shouldTypeText }){
     //______________________________________________________________________________________
     // ===== Constants =====
     const { content } = narrativeObj;
-
-
-
-    //______________________________________________________________________________________
-    // ===== Render Functions =====
-    const renderContent = () => {
-        if(content instanceof Function){
-            return content({ shouldTypeText });
-        }
-        return content;
-    }
     
 
 
@@ -33,8 +23,7 @@ export default function NarrativeDisplay({ narrativeObj, shouldTypeText }){
     // ===== Component Return =====
     if(!isObj(narrativeObj, [ "content" ])) return;
 
-    return <>
-        {renderContent()}
-        <br/>
-    </>
+    if(content instanceof Function) return content({ shouldTypeText });
+
+    return content;
 } 

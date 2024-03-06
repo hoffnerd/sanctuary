@@ -163,9 +163,13 @@
 
 .neonBoxShadowGlow{
     --_colorGlow: var(--colorGlow, --colorNeonWhiteGlow);
+    --_glowIntensity: var(--glowIntensity, 20px);
     box-shadow: 
-        0 0 20px var(--_colorGlow), 
+        0 0 var(--_glowIntensity) var(--_colorGlow), 
         inset 0 0 0px var(--_colorGlow);
+}
+.neonBoxShadowGlow.glowIntensityLow{
+    --glowIntensity: 10px;
 }
 
 .neonScrollBar{

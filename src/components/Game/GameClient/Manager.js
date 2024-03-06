@@ -11,10 +11,7 @@ import Debugger from "./Debugger";
 import Gizmo from "./Gizmo";
 import InGameTime from "./InGameTime";
 import SaveGame from "./SaveGame";
-import Resources from "./Resources";
 import Dialog from "./Dialog";
-import Events from "./Events";
-import Notifications from "./Notifications";
 // Other-----------------------------------------------------------------------------
 import { isObj } from "@/util";
 import Narrative from "./Narrative";
@@ -48,10 +45,7 @@ export default function Manager(){
 
             <InGameTime propInGameTime={saveFile.inGameTime}/>
             <SaveGame propInGameTime={saveFile.inGameTime}/>
-            {/* <Resources resources={saveFile?.saveData?.resources}/> */}
 
-            {/* <Events saveData={saveFile?.saveData}/>
-            <Notifications saveData={saveFile?.saveData}/> */}
             <Narrative saveData={saveFile?.saveData}/>
 
         </Debugger>

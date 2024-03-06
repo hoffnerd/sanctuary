@@ -89,7 +89,7 @@ export default function Narrative({ saveData }){
 
     useEffect(() => {
         if(!shouldDoThisNarrative(0, "C0.1")) return;
-        saveGame({ narrative: [ "C0.1" ] });
+        saveGame({ narrativeToAdd: "C0.1" });
     }, [initialized, chapter, narrative])
     
 

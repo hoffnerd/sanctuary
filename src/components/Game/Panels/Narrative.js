@@ -10,7 +10,6 @@ import { narrativeData } from "@/data/game/narrative"
 import NarrativeDisplay from "./NarrativeDisplay";
 // Other-----------------------------------------------------------------------------
 import { isArray, isObj } from "@/util";
-import { Fragment } from "react";
 
 
 
@@ -46,13 +45,19 @@ export default function Narrative({ }){
         return reversedNarrative.map((narrativeId, index) => {
             const narrativeObj = narrativeData[narrativeId];
             const shouldTypeText = narrativeObj.id === latestNarrativeId;
-            return <Fragment key={narrativeId} >
-                {index !== 0 && <><hr/><br/></>}
-                <NarrativeDisplay 
-                    narrativeObj={narrativeObj} 
-                    shouldTypeText={shouldTypeText} 
-                />
-            </Fragment>
+
+            // Key is `index` AND `narrativeId` here because if it is just the `narrativeId` then it 
+            // does not update the `shouldTypeText` within the content functions of the `narrativeData`
+            return (
+                <div key={`${index}_${narrativeId}`}>
+                    {index !== 0 && <><hr/><br/></>}
+                    <NarrativeDisplay 
+                        narrativeObj={narrativeObj} 
+                        shouldTypeText={shouldTypeText} 
+                    />
+                    <br/>
+                </div>
+            )
         })
     }
 } 

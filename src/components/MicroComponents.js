@@ -8,8 +8,8 @@ export const CenterVertically = ({ children, className="" }) => (
 );
 
 export const Panel = ({ children, className="" }) => (
-    <div className={`${gameStyles.panel} ${className} neonBorder neonBoxShadowGlow green`}>
-        <div className={`${gameStyles.innerPanel} neonScrollBar green`}>
+    <div className={`${gameStyles.panel} ${className} neonBorder neonBoxShadowGlow purple`}>
+        <div className={`${gameStyles.innerPanel} neonScrollBar purple`}>
             {children}
         </div>
     </div>

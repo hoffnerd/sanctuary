@@ -1,10 +1,7 @@
 "use client"
 
 // Packages--------------------------------------------------------------------------
-import { Fragment } from "react";
-import { useParams } from "next/navigation";
 // Styles----------------------------------------------------------------------------
-import { useReadSaveFile } from "@/rQuery/hooks/saveFile";
 // Data------------------------------------------------------------------------------
 import { narrativeData } from "@/data/game/narrative"
 // Components------------------------------------------------------------------------
@@ -30,11 +27,10 @@ export default function ChoiceDisplay({ choice, narrative }){
     const renderCardButton = (id, description) => (
         <div className="p-2">
             <CardButton
-                // className="neonBorder neonBoxShadowGlow red"
                 description={description}
                 disabled={id === "unknown"}
-                className={id === "unknown" && "cursor-not-allowed"}
-                onClick={() => { id !== "unknown" && saveGame({ narrative: [ ...narrative, id ] }); }}
+                onClick={() => { id !== "unknown" && saveGame({ narrativeToAdd: id }); }}
+                className={`${id === "unknown" && "cursor-not-allowed"} neonBorder neonBoxShadowGlow glowIntensityLow purple`}
             />
         </div>
     )

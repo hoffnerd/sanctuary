@@ -16,7 +16,8 @@ export const useReadSaveFile = (id) => useQuery({
 })
 
 export const useUpdateSaveFile = () => useMutation({
-    mutationFn: async ({id, inGameTime, additionalSaveData}) => updateSaveFile({id, inGameTime, additionalSaveData}),
+    // params have to be deconstructed here so the `onSuccess` and `onError` functions do not get passed to the server
+    mutationFn: async ({id, inGameTime, additionalSaveData, narrativeToAdd}) => updateSaveFile({id, inGameTime, additionalSaveData, narrativeToAdd}),
     onSuccess: (data, variables) => variables.onSuccess(data, variables),
     onError: (error, variables) => variables.onError(error, variables),
 })

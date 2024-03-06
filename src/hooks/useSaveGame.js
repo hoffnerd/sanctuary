@@ -47,11 +47,7 @@ export default function useSaveGame(){
     //______________________________________________________________________________________
     // ===== Functions =====
 
-    const applyRewards = () => {
-        
-    }
-
-    const saveGame = (additionalSaveData) => {
+    const saveGame = ({ additionalSaveData=null, narrativeToAdd=null }) => {
         if((!saveFileId) && gameSaving) return;
 
         setGameSaving(true);
@@ -59,9 +55,8 @@ export default function useSaveGame(){
         let newSaveFile = {
             id:saveFileId, 
             inGameTime, 
-            additionalSaveData:{ 
-                // resources:{ e, w, t, q }
-            },
+            additionalSaveData:{},
+            narrativeToAdd
         }
 
         if(isObj(additionalSaveData)){

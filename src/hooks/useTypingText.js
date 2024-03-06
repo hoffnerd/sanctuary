@@ -119,14 +119,19 @@ export default function useTypingText(content, options=null){
         const className = isObj(contentObj, ["className"]) ? contentObj.className : "";
         const text = isObj(contentObj, ["text"]) ? contentObj.text : contentObj;
         const textToDisplay = shouldUseState ? isObj(contentToDisplay, [key]) ? contentToDisplay[key] : "" : text;
-        return (
-            <Comp
-                key={key} 
-                className={`${(!shouldUseState) && status !== "completed" ? "invisibleText" : ""} ${className}`}
-            >
-                {textToDisplay}
-            </Comp>
-        );
+
+        switch (Comp) {
+            case "br": return <br key={key}/>;
+            case "hr": return <hr key={key}/>;
+            default: return (
+                <Comp
+                    key={key} 
+                    className={`${(!shouldUseState) && status !== "completed" ? "invisibleText" : ""} ${className}`}
+                >
+                    {textToDisplay}
+                </Comp>
+            );
+        }
     })
 
     const renderTypingText = () => {

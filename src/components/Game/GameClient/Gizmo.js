@@ -55,7 +55,7 @@ export default function Gizmo({ saveFile }){
             Log SaveFile
         </Button>
         <br/>
-        <Button variant="link" onClick={()=>saveGame({...defaultSaveData})}>
+        <Button variant="link" onClick={()=>saveGame({ additionalSaveData: {...defaultSaveData}})}>
             Restart
         </Button>
         <p>id: {saveFileId}</p>

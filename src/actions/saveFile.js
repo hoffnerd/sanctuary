@@ -1,12 +1,12 @@
 'use server'
 
-// import { revalidatePath } from 'next/cache';
-import { unstable_noStore } from 'next/cache';
 import { redirect } from 'next/navigation';
 import prisma from '@/lib/db';
 import { readServerSession } from '@/lib/protector';
 import { defaultSaveData } from '@/data/defaultSaveData';
-import { isObj } from '@/util';
+import { isArray, isObj } from '@/util';
+import { narrativeData } from '@/data/game/narrative';
+
 
 
 
@@ -25,8 +25,6 @@ const requiredRole = "TESTER";
  * @returns array of objects where each object is a save file
  */
 export const readSaveFilesByUserId = async () => {
-    unstable_noStore();
-
     const session = await readServerSession({ trace:"readSaveFilesByUserId", requiredRole });
     if(isObj(session, ["error"])) return session;
     
@@ -48,8 +46,6 @@ export const readSaveFilesByUserId = async () => {
  * @returns object that represents the saveFile
  */
 export const readSaveFile = async (id) => {
-    unstable_noStore();
-
     const session = await readServerSession({ trace:"readSaveFile", requiredRole });
     if(isObj(session, ["error"])) return session;
 
@@ -106,7 +102,7 @@ export const createSaveFile = async (name) => {
  * @param additionalSaveData - obj, represents the save data to be saved in the database.
  * @returns obj, the full saveFile from the database or an object with an error bool and error message
  */
-export const updateSaveFile = async ({id, inGameTime, additionalSaveData}) => {
+export const updateSaveFile = async ({id, inGameTime, additionalSaveData, narrativeToAdd}) => {
     
     const session = await readServerSession({ trace:"updateSaveFile", requiredRole });
     if(isObj(session, ["error"])) return session;
@@ -120,6 +116,19 @@ export const updateSaveFile = async ({id, inGameTime, additionalSaveData}) => {
         let saveData = { ...defaultSaveData };
         if(isObj(saveFile.saveData) && isObj(additionalSaveData)) saveData = { ...defaultSaveData, ...saveFile.saveData, ...additionalSaveData };
         else if(isObj(saveFile.saveData)) saveData = { ...defaultSaveData, ...saveFile.saveData };
+
+        if(narrativeToAdd){
+            saveData.narrative.push(narrativeToAdd)
+            const narrativeObj = narrativeData[narrativeToAdd];
+            isObj(narrativeObj.rewards) && Object.keys(narrativeObj.rewards).forEach(rewardType => {
+                switch (rewardType) {
+                    case "items":
+                        saveData.inventory = isArray(saveData.inventory) ? [ ...saveData.inventory, ...narrativeObj.rewards.items ] : [ ...narrativeObj.rewards.items ];
+                        break;
+                    default: return;
+                }
+            });
+        }
 
         return await prisma.saveFile.update({
             where: { id, userId:session.user.id },

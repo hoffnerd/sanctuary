@@ -51,6 +51,7 @@ export default function SaveGame({ propInGameTime }){
     //______________________________________________________________________________________
     // ===== State =====
     const [initialized, setInitialized] = useState(false);
+    const [readyToAutoSave, setReadyToAutoSave] = useState(false);
 
 
 
@@ -68,13 +69,13 @@ export default function SaveGame({ propInGameTime }){
      * @dependencies saveFileId, gameInGameTime, gameLastSavedTime
      */
     useEffect(() => {
-        if((!initialized) && gameSaving) return;
-
-        if(!saveFileId) return;
+        if(readyToAutoSave && gameSaving) return;
+        if(!(initialized && saveFileId)) return;
 
         // return early if the time since the last save is more than our `saveInterval`
         if((inGameTime - lastSavedTime) <= saveInterval) return;
         
+        setReadyToAutoSave(true);
         toggleGameSaving();
     }, [initialized, saveFileId, inGameTime, lastSavedTime]);
 
@@ -83,9 +84,10 @@ export default function SaveGame({ propInGameTime }){
      * @dependencies gameSaving
      */
     useEffect(() => {
-        if(!(initialized && gameSaving)) return;
+        if(!(initialized && readyToAutoSave && gameSaving)) return;
 
-        saveGame();
+        setReadyToAutoSave(false);
+        saveGame({});
     }, [initialized, gameSaving]);
 
 
