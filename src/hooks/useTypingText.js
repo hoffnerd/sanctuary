@@ -139,8 +139,8 @@ export default function useTypingText(content, options=null){
         
         return <>
             <div className="relative">
-                <div className="absolute">{isArray(content) ? renderContent(true) : contentToDisplay}</div>
-                <div className="invisibleText" aria-hidden="true">{isArray(content) ? renderContent(false) : content}</div>
+                <div className="absolute" aria-hidden="true">{isArray(content) ? renderContent(true) : contentToDisplay}</div>
+                <div className="invisibleText">{isArray(content) ? renderContent(false) : content}</div>
             </div>
         </>
     }

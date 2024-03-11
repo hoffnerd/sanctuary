@@ -4,4 +4,8 @@ export const defaultSaveData = {
     inventory: [],
 
     narrative: [],
+
+    crew: [
+        { id: "player" },
+    ],
 }

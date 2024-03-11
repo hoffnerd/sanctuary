@@ -6,10 +6,34 @@
 
 .gameGrid{
     --corePadding: 1rem;
+    --_fullHeight: var(--fullHeight, 90vh);
+    --_height: var(--height, var(--_fullHeight));
     
     display: grid;
     padding-left: var(--corePadding);
     padding-right: var(--corePadding);
+    height: var(--_height);
+}
+
+@media only screen and (max-height: 840px){
+    .gameGrid{
+        --_fullHeight: var(--fullHeight, 85vh);
+    }
+}
+@media only screen and (max-height: 560px){
+    .gameGrid{
+        --_fullHeight: var(--fullHeight, 80vh);
+    }
+}
+@media only screen and (max-height: 420px){
+    .gameGrid{
+        --_fullHeight: var(--fullHeight, 75vh);
+    }
+}
+@media only screen and (max-height: 340px){
+    .gameGrid{
+        --_fullHeight: var(--fullHeight, 70vh);
+    }
 }
 
 .gameGrid.desktop{
@@ -32,15 +56,25 @@
 
 .gameGrid .column{
     padding: var(--corePadding);
-    grid-row-start: 1;
-    grid-row-end: span 2;
 }
 
-.gameGrid .columnLeft{
-    grid-column-start: 1;
-    grid-column-end: span 2;
+.gameGrid.desktop .r1x2_c1x2{
     grid-row-start: 1;
     grid-row-end: span 2;
+    grid-column-start: 1;
+    grid-column-end: span 2;
+}
+
+.gameGrid.desktop .r1x1{
+    grid-row-start: 1;
+    grid-row-end: span 1;
+}
+
+.gameGrid.desktop .r2x1_c3x2{
+    grid-row-start: 2;
+    grid-row-end: span 1;
+    grid-column-start: 3;
+    grid-column-end: span 2;
 }
 
 
@@ -52,43 +86,19 @@
 }
 
 .gameGrid .panel {
-    --_fullHeight: var(--fullHeight, 90vh);
-    --_height: var(--height, var(--_fullHeight));
-
     border-width: 5px;
     border-radius: 25px;
     overflow: hidden;
-}
-
-@media only screen and (max-height: 840px){
-    .gameGrid .panel{
-        --_fullHeight: var(--fullHeight, 85vh);
-    }
-}
-@media only screen and (max-height: 560px){
-    .gameGrid .panel{
-        --_fullHeight: var(--fullHeight, 80vh);
-    }
-}
-@media only screen and (max-height: 420px){
-    .gameGrid .panel{
-        --_fullHeight: var(--fullHeight, 75vh);
-    }
-}
-@media only screen and (max-height: 340px){
-    .gameGrid .panel{
-        --_fullHeight: var(--fullHeight, 70vh);
-    }
+    height: 100%;
 }
 
 .gameGrid .panel .innerPanel{
-    
     overflow: auto;
-    height: var(--_height);
+    height: 100%;
     padding: var(--corePadding);
 }
 
-.gameGrid .panel.half{
+/* .gameGrid .panel.half{
     --height: calc( (var(--_fullHeight) / 2) - (var(--corePadding) * 1.25) )
 }
 
@@ -98,4 +108,9 @@
 
 .gameGrid .panel.fraction_2_3rd{
     --height: calc( ((var(--_fullHeight) / 3) * 2) - (var(--corePadding) * 1.25) )
+} */
+
+.gameGrid.desktop .crewGrid{
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
 }
