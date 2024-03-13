@@ -7,5 +7,5 @@ export const defaultSaveData = {
 
     crew: [
         { id: "player" },
-    ],
+    ], 
 }
