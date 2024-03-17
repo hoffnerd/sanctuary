@@ -18,7 +18,7 @@ export default function SaveFiles(){
 
     //______________________________________________________________________________________
     // ===== Hooks  =====
-    const { data:saveFiles } = useReadSaveFilesByUserId();
+    const { data:saveFiles, isLoading } = useReadSaveFilesByUserId();
 
 
 
@@ -31,7 +31,7 @@ export default function SaveFiles(){
         </Alert>
     )
 
-    if(!isArray(saveFiles)) return <Loading/>
+    if(isLoading) return <Loading/>;
 
     if(isArray(saveFiles)) return saveFiles.map((saveFile) => <SaveFile key={saveFile.id} saveFile={saveFile} />)
     
