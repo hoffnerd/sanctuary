@@ -6,6 +6,7 @@ import { readServerSession } from '@/lib/protector';
 import { defaultSaveData } from '@/data/defaultSaveData';
 import { isArray, isObj } from '@/util';
 import { narrativeData } from '@/data/game/narrative';
+import { defaultAbilities } from '@/data/game/crew';
 
 
 
@@ -95,6 +96,11 @@ export const createSaveFile = async (name) => {
 //______________________________________________________________________________________
 // ===== Update Action =====
 
+const calculateAbility = (playerAbilities, abilityKey, valueToAdd) => {
+    const abilities = isObj(playerAbilities) ? { ...defaultAbilities, ...playerAbilities } : { ...defaultAbilities };
+    return abilities[abilityKey] + valueToAdd;
+}
+
 /**
  * Updates the in-game time and the save date of a save file in a database.
  * @param id - string, unique identifier of the save file that you want to update.
@@ -117,6 +123,9 @@ export const updateSaveFile = async ({id, inGameTime, additionalSaveData, narrat
         if(isObj(saveFile.saveData) && isObj(additionalSaveData)) saveData = { ...defaultSaveData, ...saveFile.saveData, ...additionalSaveData };
         else if(isObj(saveFile.saveData)) saveData = { ...defaultSaveData, ...saveFile.saveData };
 
+        let playerObj = isArray(saveData.crew) && saveData.crew.find(crewObj => crewObj.id === saveData.playingAs || "player" );
+        let playerAbilities = isObj(playerObj, [ "abilities" ]) ? playerObj.abilities : {}
+
         if(narrativeToAdd){
             saveData.narrative.push(narrativeToAdd)
             const narrativeObj = narrativeData[narrativeToAdd];
@@ -125,7 +134,20 @@ export const updateSaveFile = async ({id, inGameTime, additionalSaveData, narrat
                     case "items":
                         saveData.inventory = isArray(saveData.inventory) ? [ ...saveData.inventory, ...narrativeObj.rewards.items ] : [ ...narrativeObj.rewards.items ];
                         break;
-                    default: return;
+                    case "abilities":
+                        isObj(narrativeObj.rewards) && Object.keys(narrativeObj.rewards.abilities).forEach((abilityKey => {
+                            let keyToUse = abilityKey
+                            let playerValue = narrativeObj.rewards.abilities[keyToUse];
+                            if(abilityKey === "random"){
+                                const randomKeys = Object.keys(narrativeObj.rewards.abilities.random);
+                                keyToUse = randomKeys[Math.floor(Math.random() * randomKeys.length)];
+                                playerValue = narrativeObj.rewards.abilities.random[keyToUse];
+                            }
+                            playerAbilities[keyToUse] = calculateAbility(playerAbilities, keyToUse, playerValue);
+                        }));
+                        if(isObj(playerAbilities)) playerObj.abilities = playerAbilities;
+                        break;
+                    default: break;
                 }
             });
         }

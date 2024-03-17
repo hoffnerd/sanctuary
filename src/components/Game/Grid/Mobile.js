@@ -1,22 +1,28 @@
+"use client"
 
 // React/Next------------------------------------------------------------------------
 // Styles ---------------------------------------------------------------------------
 import styles from "@/styles/game.module.css";
+// Stores----------------------------------------------------------------------------
+import { useMobileStore } from "@/stores/game";
 // Components------------------------------------------------------------------------
 import { Panel, Temp } from "@/components/MicroComponents";
 // Other-----------------------------------------------------------------------------
 import { isObj } from "@/util";
+import Crew from "../Panels/Crew";
+import Inventory from "../Panels/Inventory";
+import Narrative from "../Panels/Narrative";
+import Choices from "../Panels/Choices";
 
 
 
 //______________________________________________________________________________________
-// ===== Constants  =====
-const panelsObj = {
-    // notifications: <Notifications/>,
-    // mercs: <Mercs/>,
-    // contracts: <Contracts/>
-}
-
+// ===== Micro Component  =====
+const Column = ({ children, className=styles.r1x3 }) => (
+    <div className={`${styles.column} ${className}`}>
+        <Panel>{children}</Panel>
+    </div>
+)
 
 
 //______________________________________________________________________________________
@@ -24,18 +30,32 @@ const panelsObj = {
 export default function Mobile({ }){
 
     //______________________________________________________________________________________
+    // ===== Stores =====
+    const panelOpen = useMobileStore((state) => state.panelOpen);
+
+
+
+    //______________________________________________________________________________________
+    // ===== Component Return  =====
+
+    const renderGrid = () => {
+        switch (panelOpen) {
+            case "main": return <>
+                <Column className={styles.r1x2}><Narrative/></Column>
+                <Column className={styles.r3x1}><Choices/></Column>
+            </>
+            case "crew": return <Column><Crew/></Column>
+            case "inventory": return <Column><Inventory/></Column>
+            default: return <Column><Temp/></Column>
+        }
+    }
+
+
+    //______________________________________________________________________________________
     // ===== Component Return  =====
     return(
         <div className={`${styles.gameGrid} ${styles.mobile} hiddenOnDesktop hiddenOnTablet`}>
-            <div className={`${styles.column} ${styles.columnCenter}`}>
-                <Panel className={styles.fraction_2_3rd}>
-                    <Temp/>
-                </Panel>
-                <div className={styles.panelSpacing}/>
-                <Panel className={styles.fraction_1_3rd}>
-                    <Temp/>
-                </Panel>
-            </div>
+            {renderGrid()}
         </div>
     )
 } 

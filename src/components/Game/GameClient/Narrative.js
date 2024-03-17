@@ -12,10 +12,18 @@ import { useDebugModeStore, useFullScreenDialogStore } from "@/stores/game";
 import useSaveGame from "@/hooks/useSaveGame";
 // Components------------------------------------------------------------------------
 // Data------------------------------------------------------------------------------
+import { nextNarrativeInterval, typingCharacterInterval } from "@/data/_config";
 import { defaultSaveData } from "@/data/defaultSaveData";
 import { narrativeData } from "@/data/game/narrative";
 // Other-----------------------------------------------------------------------------
 import { checkRoleAccessLevel, isArray, isObj } from "@/util";
+
+
+
+//______________________________________________________________________________________
+// ===== Constants =====
+
+const defaultNarrativeObj = { prerequisites:[], contentCharacters:40, waitTime:nextNarrativeInterval }
 
 
 
@@ -63,17 +71,43 @@ export default function Narrative({ saveData }){
     //______________________________________________________________________________________
     // ===== Functions for Use Effects =====
 
-    const shouldDoThisNarrative = (chapterToCheck, narrativeIdToCheck) => {
+    const findChapter = (id) => {
+        let regString = "C(.+)";
+        const nestedAmount = id && id.split(".").length-1
+        for (let i = 1; i < nestedAmount; i++){ regString += ".(.+)" }
+
+        const reg = new RegExp(regString);
+        const extracted = reg.exec(id);
+        if(isArray(extracted, 1) && extracted[1]) return parseInt(extracted[1]);
+        return null
+    }
+
+    const shouldDoThisNarrative = (narrativeIdToCheck) => {
+        const chapterToCheck = findChapter(narrativeIdToCheck);
         const prerequisites = isObj(narrativeData[narrativeIdToCheck], ["prerequisites"]) ? narrativeData[narrativeIdToCheck].prerequisites : [];
         let metPrerequisites = true;
         for (let i = 0; i < prerequisites.length; i++) {
             const prerequisite = prerequisites[i];
-            if(narrative.includes(prerequisite)){
+            if(!narrative.includes(prerequisite)){
                 metPrerequisites = false;
                 break;
             }
         }
         return initialized && chapter === chapterToCheck && metPrerequisites && (!narrative.includes(narrativeIdToCheck))
+    }
+
+    const shouldDoNextNarrative = () => {
+        if(!(isArray(narrative) && isObj(narrativeData, [ narrative[narrative.length-1] ]))) return { shouldDo:false };
+        const { id:mostRecentNarrativeId, nextNarrative, contentCharacters, waitTime  } = { ...defaultNarrativeObj, ...narrativeData[narrative[narrative.length-1]] };
+        if(!(mostRecentNarrativeId && nextNarrative)) return { shouldDo:false };
+        const nextNarrativeObj = isObj(narrativeData, [nextNarrative]) ? narrativeData[nextNarrative] : null;
+        if(!isObj(nextNarrativeObj, ["id"])) return { shouldDo:false };
+        const { id } = { ...defaultNarrativeObj, ...nextNarrativeObj };
+        return { 
+            id,
+            shouldDo: shouldDoThisNarrative(id), 
+            timeoutTime: (contentCharacters * typingCharacterInterval) + waitTime 
+        }
     }
 
 
@@ -88,8 +122,16 @@ export default function Narrative({ saveData }){
     }, [initialized, saveFileId])
 
     useEffect(() => {
-        if(!shouldDoThisNarrative(0, "C0.1")) return;
-        saveGame({ narrativeToAdd: "C0.1" });
+        if(!shouldDoThisNarrative("C0")) return;
+        saveGame({ narrativeToAdd: "C0" });
+    }, [initialized, chapter, narrative])
+
+    useEffect(() => {
+        const { id, shouldDo, timeoutTime } = shouldDoNextNarrative();
+        if(!shouldDo) return;
+        setTimeout(() => {
+            saveGame({ narrativeToAdd: id });
+        }, timeoutTime);
     }, [initialized, chapter, narrative])
     
 

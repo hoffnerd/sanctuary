@@ -4,8 +4,14 @@
     or just easier to have here so I don't have to search multiple files to turn off random features.
 */
 
-/** bool, this is just an example */
+/** @constant {Boolean}, this is just an example */
 export const example = true;
 
-/** int, the amount of time before we do an auto save in seconds */
+/** @constant {Number}, the amount of time to type each character in microseconds */
+export const typingCharacterInterval = 25; 
+
+/** @constant {Number}, the amount of time before we do an auto save in seconds */ 
 export const saveInterval = 300; 
+
+/** @constant {Number}, the amount of time before we auto run the the next narrative, if there are no choices in microseconds */
+export const nextNarrativeInterval = 2500; 

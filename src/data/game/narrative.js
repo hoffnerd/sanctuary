@@ -8,9 +8,20 @@ export const narrativeData = {
         title: "Unknown Path",
         content: <div>Unknown Path</div>,
     },
+    "C0": {
+        id: "C0",
+        title: "The Path You Choose",
+        content: ({ shouldTypeText }) => {
+            const [ renderTypingText ] = useTypingText([ `Chapter 0: The Path You Choose` ], { shouldTypeText });
+            return renderTypingText();
+        },
+        contentCharacters: 30,
+        nextNarrative: "C0.1",
+    },
     "C0.1": {
         id: "C0.1",
         title: "Wake Up",
+        prerequisites: [ "C0", ],
         content: ({ shouldTypeText }) => {
             const [ renderTypingText ] = useTypingText([ 
                 `You wake up in a forest, cold and alone. For some reason, you are having trouble remembering how you even got here. You look around and notice that your in a small abandoned camp site. A tent still standing with the zipper of the door flaps hitting the poles in the wind. Basic camping supplies lie on the ground, scattered as if the place had been ransacked. You look to the sky, it's hard to tell with the tree tops blocking most of it, you determine sunrise will be here shortly.`,
@@ -51,7 +62,7 @@ export const narrativeData = {
         title: "Forest",
         prerequisites: [ "C0.1", ],
         rewards: {
-            skills: {
+            abilities: {
                 random: { intelligence: 1, dexterity: 1 }
             }
         },

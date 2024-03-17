@@ -82,18 +82,18 @@ export default function SaveFile({ saveFile }) {
                 <div className="text-center">{renderNameAndChapter()}</div>
             </Item>
             <Item col="regularCol">
-                <div className="text-center">{renderResource("e", "€")}</div>
+                <div className="text-center"></div>
             </Item>
 
             <Item col="regularCol"><hr/></Item>
             <Item col="regularCol">
-                <div className="text-center">{renderResource("w", "Weapon")}</div>
+                <div className="text-center"></div>
             </Item>
             <Item col="regularCol">
-                <div className="text-center">{renderResource("t", "Tech")}</div>
+                <div className="text-center"></div>
             </Item>
             <Item col="regularCol">
-                <div className="text-center">{renderResource("q", "Quickhack")}</div>
+                <div className="text-center"></div>
             </Item>
             <Item col="regularCol"><hr/></Item>
 
@@ -115,17 +115,17 @@ export default function SaveFile({ saveFile }) {
             
             <Item col="firstCol">{renderNameAndChapter()}</Item>
             <Item col="secondCol">
-                <div className="flex flex-row-reverse">{renderResource("e", "€")}</div>
+                <div className="flex flex-row-reverse"></div>
             </Item>
 
             <Item col="firstColComponents">
-                <div className="text-center">{renderResource("w", "Weapon")}</div>
+                <div className="text-center"></div>
             </Item>
             <Item col="secondColComponents">
-                <div className="text-center">{renderResource("t", "Tech")}</div>
+                <div className="text-center"></div>
             </Item>
             <Item col="thirdColComponents">
-                <div className="text-center">{renderResource("q", "Quickhack")}</div>
+                <div className="text-center"></div>
             </Item>
 
             <Item col="firstCol">{renderStartedDate()}</Item>
@@ -138,15 +138,15 @@ export default function SaveFile({ saveFile }) {
     const renderContentLarge = () => (
         <div className={`${styles.content} ${styles.large}`}>
             <Item col="firstCol"><TypeBadge type={type}>{type}</TypeBadge></Item>
-            <Item><div className="text-center">{renderResource("w", "Weapon")}</div></Item>
+            <Item><div className="text-center"></div></Item>
             <Item col="thirdCol"><div className="flex flex-row-reverse">{renderInGameTime()}</div></Item>
             
             <Item col="firstCol">{renderNameAndChapter()}</Item>
-            <Item><p className="text-center">{renderResource("t", "Tech")}</p></Item>
+            <Item><p className="text-center"></p></Item>
             <Item col="thirdCol"><div className="flex flex-row-reverse">{renderStartedDate()}</div></Item>
             
-            <Item col="firstCol">{renderResource("e", "€")}</Item>
-            <Item><div className="text-center">{renderResource("q", "Quickhack")}</div></Item>
+            <Item col="firstCol"></Item>
+            <Item><div className="text-center"></div></Item>
             <Item col="thirdCol"><div className="flex flex-row-reverse">{renderLastSavedTime()}</div></Item>
         </div>
     )

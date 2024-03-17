@@ -5,6 +5,7 @@
 import { useState, useEffect } from "react";
 // Styles----------------------------------------------------------------------------
 // Data------------------------------------------------------------------------------
+import { typingCharacterInterval } from "@/data/_config";
 // Components------------------------------------------------------------------------
 // Other-----------------------------------------------------------------------------
 import { isArray, isObj } from "@/util";
@@ -21,7 +22,7 @@ const defaultOptions = { shouldTypeText:true, autoStart:true }
 //______________________________________________________________________________________
 // ===== Pure Functions =====
 
-const delay = () => new Promise(res => setTimeout(() => res(), 25));
+const delay = () => new Promise(res => setTimeout(() => res(), typingCharacterInterval));
 
 
 

@@ -42,10 +42,12 @@
 }
 
 .gameGrid.tablet{
+    grid-template-rows: repeat(2, minmax(0, 1fr));
     grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
 .gameGrid.mobile{
+    grid-template-rows: repeat(3, minmax(0, 1fr));
     grid-template-columns: repeat(1, minmax(0, 1fr));
 }
 
@@ -59,22 +61,44 @@
 }
 
 .gameGrid.desktop .r1x2_c1x2{
-    grid-row-start: 1;
     grid-row-end: span 2;
-    grid-column-start: 1;
     grid-column-end: span 2;
-}
-
-.gameGrid.desktop .r1x1{
-    grid-row-start: 1;
-    grid-row-end: span 1;
 }
 
 .gameGrid.desktop .r2x1_c3x2{
     grid-row-start: 2;
-    grid-row-end: span 1;
     grid-column-start: 3;
     grid-column-end: span 2;
+}
+
+.gameGrid.tablet .c1x2{
+    grid-column-end: span 2;
+}
+
+.gameGrid.tablet .c3x1{
+    grid-column-start: 3;
+}
+
+.gameGrid.tablet .r2x1_c1x2{
+    grid-row-start: 2;
+    grid-column-end: span 2;
+}
+
+.gameGrid.tablet .r2x1_c3x1{
+    grid-row-start: 2;
+    grid-column-start: 3;
+}
+
+.gameGrid.mobile .r1x2{
+    grid-row-end: span 2;
+}
+
+.gameGrid.mobile .r1x3{
+    grid-row-end: span 3;
+}
+
+.gameGrid.mobile .r3x1{
+    grid-row-start: 3;
 }
 
 

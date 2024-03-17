@@ -25,12 +25,12 @@ export default function Desktop({ }){
                     <Narrative/>
                 </Panel>
             </div>
-            <div className={`${styles.column} ${styles.r1x1}`}>
+            <div className={`${styles.column}`}>
                 <Panel> 
                     <Choices/>
                 </Panel>
             </div>
-            <div className={`${styles.column} ${styles.r1x1}`}>
+            <div className={`${styles.column}`}>
                 <Panel>
                     <Inventory/>
                 </Panel>
