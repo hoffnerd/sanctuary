@@ -47,7 +47,7 @@ export default function BottomNav(){
         <div className="sticky top-[100vh] hiddenOnDesktop hiddenOnTablet">
             <div className="grid grid-cols-4">
                 <NavButton panelKey="main" iconKey="faBell" />
-                <NavButton panelKey="crew" iconKey="faUsers" />
+                <NavButton panelKey="stats" iconKey="faUsers" />
                 <NavButton panelKey="inventory" iconKey="faFile" />
                 <NavButtonMore/>
             </div>

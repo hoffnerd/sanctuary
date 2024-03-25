@@ -1,13 +1,13 @@
 export const defaultSaveData = {
     chapter: 0, 
     
-    playingAs: null,
+    abilities:{},
 
     inventory: [],
 
     narrative: [],
 
-    crew: [
-        { id: "player" },
-    ], 
+    crew: {}, 
+
+    party: [ "player" ]
 }

@@ -14,6 +14,7 @@ import { Button } from '@/components/shadcn/ui/button';
 import { defaultSaveData } from '@/data/defaultSaveData';
 // Other-----------------------------------------------------------------------------
 import { checkRoleAccessLevel, isObj } from '@/util';
+import { calculateAbilities } from '@/util/abilities';
 
 //______________________________________________________________________________________
 // ===== Component =====
@@ -42,7 +43,7 @@ export default function Gizmo({ saveFile }){
     // ===== Hooks =====
     const { saveGame } = useSaveGame();
 
-
+    
 
     //______________________________________________________________________________________
     // ===== Component Return =====
@@ -53,6 +54,16 @@ export default function Gizmo({ saveFile }){
         <br/>
         <Button variant="link" onClick={()=>console.log(saveFile)}>
             Log SaveFile
+        </Button>
+        <br/>
+        <Button variant="link" onClick={()=>console.log({ 
+            ...calculateAbilities( saveFile.saveData ) 
+        })}>
+            Log Calculated Abilities
+        </Button>
+        <br/>
+        <Button variant="link" onClick={()=>saveGame({ additionalSaveData: { crew:{ bartonSimon:5 }, party: [ "player", "bartonSimon" ] }})}>
+            Add Simon with 5 points
         </Button>
         <br/>
         <Button variant="link" onClick={()=>saveGame({ additionalSaveData: {...defaultSaveData}})}>

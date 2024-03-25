@@ -25,25 +25,6 @@ export default async function Page() {
     // ===== Server Actions =====
     const logs = await readAllMarkdownFiles("change-log");
 
-    /*
-        = New Content =
-        ```
-        -
-        ```
-
-        
-        = Content Changed =
-        ```
-        -
-        ```
-
-        
-        = Bug Fixes =
-        ```
-        -
-        ```
-    */
-
     //______________________________________________________________________________________
     // ===== Component Return =====
     return (

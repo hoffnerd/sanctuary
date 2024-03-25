@@ -7,11 +7,11 @@ import { create } from 'zustand'
 export const useMobileStore = create((set) => ({
     panelOpen: "main",
     navBadge_main: 0,
-    navBadge_crew: 1,
+    navBadge_stats: 1,
     navBadge_inventory: 0,
     setPanelOpen: (panelOpen) => set(() => ({ panelOpen })),
     setNavBadge_main: (navBadge_main) => set(() => ({ navBadge_main })),
-    setNavBadge_crew: (navBadge_crew) => set(() => ({ navBadge_crew })),
+    setNavBadge_stats: (navBadge_stats) => set(() => ({ navBadge_stats })),
     setNavBadge_inventory: (navBadge_inventory) => set(() => ({ navBadge_inventory })),
 }))
 

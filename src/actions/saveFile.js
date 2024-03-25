@@ -123,8 +123,7 @@ export const updateSaveFile = async ({id, inGameTime, additionalSaveData, narrat
         if(isObj(saveFile.saveData) && isObj(additionalSaveData)) saveData = { ...defaultSaveData, ...saveFile.saveData, ...additionalSaveData };
         else if(isObj(saveFile.saveData)) saveData = { ...defaultSaveData, ...saveFile.saveData };
 
-        let playerObj = isArray(saveData.crew) && saveData.crew.find(crewObj => crewObj.id === saveData.playingAs || "player" );
-        let playerAbilities = isObj(playerObj, [ "abilities" ]) ? playerObj.abilities : {}
+        let playerAbilities = isObj(saveData.abilities) ? saveData.abilities : {}
 
         if(narrativeToAdd){
             saveData.narrative.push(narrativeToAdd)
@@ -145,7 +144,7 @@ export const updateSaveFile = async ({id, inGameTime, additionalSaveData, narrat
                             }
                             playerAbilities[keyToUse] = calculateAbility(playerAbilities, keyToUse, playerValue);
                         }));
-                        if(isObj(playerAbilities)) playerObj.abilities = playerAbilities;
+                        if(isObj(playerAbilities)) saveData.abilities = playerAbilities;
                         break;
                     default: break;
                 }

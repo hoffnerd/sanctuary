@@ -7,7 +7,7 @@ import { Panel } from "@/components/MicroComponents";
 import Narrative from "../Panels/Narrative";
 import Choices from "../Panels/Choices";
 import Inventory from "../Panels/Inventory";
-import Crew from "../Panels/Crew";
+import Stats from "../Panels/Stats";
 // Other-----------------------------------------------------------------------------
 
 
@@ -37,7 +37,7 @@ export default function Desktop({ }){
             </div>
             <div className={`${styles.column} ${styles.r2x1_c3x2}`}>
                 <Panel>
-                    <Crew/>
+                    <Stats/>
                 </Panel>
             </div>
         </div>

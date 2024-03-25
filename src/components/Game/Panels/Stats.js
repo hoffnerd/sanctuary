@@ -3,18 +3,23 @@
 import { useParams } from "next/navigation";
 // ReactQuery------------------------------------------------------------------------
 import { useReadSaveFile } from "@/rQuery/hooks/saveFile";
+// Styles----------------------------------------------------------------------------
+import styles from "@/styles/game.module.css";
 // Data------------------------------------------------------------------------------
-import { crewData } from "@/data/game/crew";
+import { crewData, partyLimitMax } from "@/data/game/crew";
 // Components------------------------------------------------------------------------
 import CrewDisplay from "./CrewDisplay";
 // Other-----------------------------------------------------------------------------
 import { isArray, isObj } from "@/util";
+import AbilitiesDisplay from "./AbilitiesDisplay";
+import PartyDisplay from "./PartyDisplay";
+import { calculateAbilities } from "@/util/abilities";
 
 
 
 //______________________________________________________________________________________
 // ===== Component  =====
-export default function Crew({}){
+export default function Stats({}){
 
     //______________________________________________________________________________________
     // ===== URL Params =====
@@ -32,41 +37,37 @@ export default function Crew({}){
 
     //______________________________________________________________________________________
     // ===== Constants =====
-    const { id, name, saveData: { crew } } = saveFile;
+    const { id, name, saveData: { abilities, crew, party } } = saveFile;
 
 
 
     //______________________________________________________________________________________
     // ===== Render Functions =====
 
-    const renderCrew = () => {
-        if(isArray(crew)) return crew.map(crewMember => {
-            const isPlayer = crewMember?.id && crewMember.id === "player";
-            const playerObj = isPlayer ? { ...crewMember, display:name } : null;
-            if(isPlayer) return <CrewDisplay key="player" {...playerObj} />;
-
-            const defaultCrewMemberObj = isObj(crewMember, ["id"]) ? crewData[crewMember.id] : crewData[crewMember];
-            const saveFileCrewMemberObj = isObj(crewMember, ["id"]) ? crewMember : null;
-            const crewMemberObj = {
-                ...defaultCrewMemberObj,
-                abilities: saveFileCrewMemberObj && isObj(saveFileCrewMemberObj.abilities) ? {
-                    ...defaultCrewMemberObj.abilities, 
-                    ...saveFileCrewMemberObj.abilities,
-                } : defaultCrewMemberObj.abilities,
-            }
-            return <CrewDisplay key={defaultCrewMemberObj.id} {...crewMemberObj} />
+    const renderParty = () => {
+        if(isArray(party)) return party.map(crewId => {
+            const crewDisplay = crewId === "player" ? name : isObj(crewData, [crewId]) ? crewData[crewId].display : "Unknown";
+            return <PartyDisplay key={crewId} crewId={crewId} crewDisplay={crewDisplay} />
         });
-        return "No Crew Members... Even yourself is gone beyond...";
+        return "No party members...";
     }
 
 
 
     //______________________________________________________________________________________
     // ===== Component Return =====
-    return <>
-        <h2 className="text-xl">Crew</h2>
-        <hr/>
-        <div className="p-1"/>
-        {renderCrew()}
-    </>
+    return (
+        <div className={styles.crewGrid}>
+            <div>
+                <h2 className="text-xl flex justify-between">
+                    <span>Party</span>
+                    <span>{party.length}/{partyLimitMax}</span>
+                </h2>
+                <hr/>
+                <div className="p-1"/>
+                {renderParty()}
+            </div>
+            {isArray(party) && <AbilitiesDisplay abilities={calculateAbilities({abilities, crew, party})}/>}
+        </div>
+    )
 } 

@@ -9,7 +9,7 @@ import { useMobileStore } from "@/stores/game";
 import { Panel, Temp } from "@/components/MicroComponents";
 // Other-----------------------------------------------------------------------------
 import { isObj } from "@/util";
-import Crew from "../Panels/Crew";
+import Stats from "../Panels/Stats";
 import Inventory from "../Panels/Inventory";
 import Narrative from "../Panels/Narrative";
 import Choices from "../Panels/Choices";
@@ -44,7 +44,7 @@ export default function Mobile({ }){
                 <Column className={styles.r1x2}><Narrative/></Column>
                 <Column className={styles.r3x1}><Choices/></Column>
             </>
-            case "crew": return <Column><Crew/></Column>
+            case "stats": return <Column><Stats/></Column>
             case "inventory": return <Column><Inventory/></Column>
             default: return <Column><Temp/></Column>
         }

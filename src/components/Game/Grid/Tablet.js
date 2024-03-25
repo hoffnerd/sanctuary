@@ -7,7 +7,7 @@ import { Panel, Temp } from "@/components/MicroComponents";
 import Narrative from "../Panels/Narrative";
 import Choices from "../Panels/Choices";
 import Inventory from "../Panels/Inventory";
-import Crew from "../Panels/Crew";
+import Stats from "../Panels/Stats";
 // Other-----------------------------------------------------------------------------
 
 
@@ -32,7 +32,7 @@ export default function Tablet({ }){
             </div>
             <div className={`${styles.column} ${styles.r2x1_c1x2}`}>
                 <Panel>
-                    <Crew/>
+                    <Stats/>
                 </Panel>
             </div>
             <div className={`${styles.column} ${styles.r2x1_c3x1}`}>
