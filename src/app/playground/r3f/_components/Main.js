@@ -2,12 +2,12 @@
 
 // Packages -------------------------------------------------------------------------
 import { useEffect, useState } from 'react'
-import { Canvas } from '@react-three/fiber'
-import { Physics, Debug } from '@react-three/cannon'
+import { Canvas } from '@react-three/fiber';
+import { OrbitControls } from '@react-three/drei';
+import { Leva, useControls } from "leva";
 // Components -----------------------------------------------------------------------
-import Plane from "./Plane";
-import CompoundBody from './CompoundBody';
-import D10 from './D10';
+import MainLighting from './Lighting/MainLighting';
+import MainScene from './Scenes/MainScene';
 // Other ----------------------------------------------------------------------------
 
 
@@ -16,29 +16,39 @@ import D10 from './D10';
 // ===== Component  =====
 export default function Main() {
 
-    //______________________________________________________________________________________
-    // ===== State =====
-    const [flag, setFlag] = useState(false);
+
 
     //______________________________________________________________________________________
-    // ===== Use Effect =====
-    useEffect(() => void setTimeout(() => setFlag(true), 2000), [])
+    // ===== Leva =====
+
+    const { scene } = useControls({ 
+        scene:{ value:1, min:0, max:1, step:1 },
+    });
+
+
+
+    //______________________________________________________________________________________
+    // ===== Leva =====
+
+    const renderScene = () => {
+        switch (scene) {
+            case 1: return <MainScene/>;
+            // case 2: return <TextureScene/>;
+            // case 3: return <CampingScene/>;
+            default: return;
+        }
+    }
+
+
 
     //______________________________________________________________________________________
     // ===== Component Return  =====
-    return (
-        <Canvas dpr={[1, 2]} shadows gl={{ alpha: false }} camera={{ position: [0, 5, 5], fov: 70 }}>
-            <color attach="background" args={['#020817']} />
-            <hemisphereLight intensity={1} />
-            <spotLight position={[5, 5, 5]} angle={0.75} penumbra={1} intensity={1} castShadow shadow-mapSize-width={1028} shadow-mapSize-height={1028} />
-            <Physics iterations={6}>
-                <Debug scale={1.1} color="white">
-                    <Plane position={[0, 0, 0]} rotation={[-Math.PI / 2, 0, 0]} />
-                    <CompoundBody position={[1.5, 5, 0.5]} rotation={[1.25, 0, 0]} />
-                    <CompoundBody position={[2.5, 3, 0.25]} rotation={[1.25, -1.25, 0]} />
-                    {flag && <CompoundBody position={[2.5, 4, 0.25]} rotation={[1.25, -1.25, 0]} />}
-                </Debug>
-            </Physics>
+    return <>
+        <Leva/>
+        <Canvas shadows camera={{ position:[0,0,16], fov:40 }}>
+            <MainLighting />
+            {renderScene()}
+            <OrbitControls />
         </Canvas>
-    )
+    </>
 } 
