@@ -1,6 +1,4 @@
-export const defaultSaveData = {
-    chapter: 0, 
-    
+export const defaultSaveData = {    
     abilities:{},
 
     inventory: [],

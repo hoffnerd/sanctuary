@@ -73,7 +73,7 @@ export default function SaveFile({ saveFile }) {
 
     const renderContentSmall = () => (
         <div className={`${styles.content} ${styles.small}`}>
-            <Item col="firstCol"><TypeBadge type={type}>{type}</TypeBadge></Item>
+            <Item col="firstCol"></Item>
             <Item col="secondCol">
                 <div className="flex flex-row-reverse">{renderInGameTime()}</div>
             </Item>
@@ -108,7 +108,7 @@ export default function SaveFile({ saveFile }) {
 
     const renderContentMedium = () => (
         <div className={`${styles.content} ${styles.medium}`}>
-            <Item col="firstCol"><TypeBadge type={type}>{type}</TypeBadge></Item>
+            <Item col="firstCol"></Item>
             <Item col="secondCol">
                 <div className="flex flex-row-reverse">{renderInGameTime()}</div>
             </Item>
@@ -137,7 +137,7 @@ export default function SaveFile({ saveFile }) {
 
     const renderContentLarge = () => (
         <div className={`${styles.content} ${styles.large}`}>
-            <Item col="firstCol"><TypeBadge type={type}>{type}</TypeBadge></Item>
+            <Item col="firstCol"></Item>
             <Item><div className="text-center"></div></Item>
             <Item col="thirdCol"><div className="flex flex-row-reverse">{renderInGameTime()}</div></Item>
             
