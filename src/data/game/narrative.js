@@ -1,23 +1,25 @@
 import useTypingText from "@/hooks/useTypingText";
+import { chapters } from "./narrative/chapters";
+import { C00 } from "./narrative/C00";
+
 
 
 
 export const narrativeData = {
+    ...chapters,
+    ...C00,
+
     unknown: {
         id:"unknown",
         title: "Unknown Path",
         content: <div>Unknown Path</div>,
     },
-    "C0": {
-        id: "C0",
-        title: "The Path You Choose",
-        content: ({ shouldTypeText }) => {
-            const [ renderTypingText ] = useTypingText([ `Chapter 0: The Path You Choose` ], { shouldTypeText });
-            return renderTypingText();
-        },
-        contentCharacters: 30,
-        nextNarrative: "C0.1",
+    end:{
+        id: "C00.end",
+        title: "End",
+        content: <div>You have reached the end of the playable content.</div>,
     },
+
     "C0.1": {
         id: "C0.1",
         title: "Wake Up",

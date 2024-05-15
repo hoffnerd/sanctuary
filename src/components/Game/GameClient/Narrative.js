@@ -16,7 +16,7 @@ import { nextNarrativeInterval, typingCharacterInterval } from "@/data/_config";
 import { defaultSaveData } from "@/data/defaultSaveData";
 import { narrativeData } from "@/data/game/narrative";
 // Other-----------------------------------------------------------------------------
-import { checkRoleAccessLevel, isArray, isObj } from "@/util";
+import { checkRoleAccessLevel, findChapter, isArray, isObj } from "@/util";
 
 
 
@@ -71,19 +71,7 @@ export default function Narrative({ saveData }){
     //______________________________________________________________________________________
     // ===== Functions for Use Effects =====
 
-    const findChapter = (id) => {
-        let regString = "C(.+)";
-        const nestedAmount = id && id.split(".").length-1
-        for (let i = 1; i < nestedAmount; i++){ regString += ".(.+)" }
-
-        const reg = new RegExp(regString);
-        const extracted = reg.exec(id);
-        if(isArray(extracted, 1) && extracted[1]) return parseInt(extracted[1]);
-        return null
-    }
-
     const shouldDoThisNarrative = (narrativeIdToCheck) => {
-        const chapterToCheck = findChapter(narrativeIdToCheck);
         const prerequisites = isObj(narrativeData[narrativeIdToCheck], ["prerequisites"]) ? narrativeData[narrativeIdToCheck].prerequisites : [];
         let metPrerequisites = true;
         for (let i = 0; i < prerequisites.length; i++) {
@@ -93,7 +81,7 @@ export default function Narrative({ saveData }){
                 break;
             }
         }
-        return initialized && chapter === chapterToCheck && metPrerequisites && (!narrative.includes(narrativeIdToCheck))
+        return initialized && metPrerequisites && (!narrative.includes(narrativeIdToCheck))
     }
 
     const shouldDoNextNarrative = () => {
@@ -122,8 +110,8 @@ export default function Narrative({ saveData }){
     }, [initialized, saveFileId])
 
     useEffect(() => {
-        if(!shouldDoThisNarrative("C0")) return;
-        saveGame({ narrativeToAdd: "C0" });
+        if(!shouldDoThisNarrative("C00")) return;
+        saveGame({ narrativeToAdd: "C00" });
     }, [initialized, chapter, narrative])
 
     useEffect(() => {

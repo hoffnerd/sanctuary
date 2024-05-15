@@ -92,3 +92,22 @@ export const convertObjToArray = (obj) => {
     if(!isObj(obj)) return [];
     return Object.keys(obj).map((key) => obj[key]);
 }
+
+/**
+ * Extracts the chapter id from a given string.
+ * @param id - string representing a narrative identifier in a nested format, such as 
+ * "C1.2.3" where each number represents a level of nesting within the chapter structure.
+ * @returns  a string representing the chapter id extracted from the provided `id` string. 
+ * If the chapter id is found, it is returned. If the chapter id cannot be extracted or 
+ * is not found, the function returns `null`.
+ */
+export const findChapter = (id) => {
+    let regString = "C(.+)";
+    const nestedAmount = id && id.split(".").length-1
+    for (let i = 1; i < nestedAmount; i++){ regString += ".(.+)" }
+
+    const reg = new RegExp(regString);
+    const extracted = reg.exec(id);
+    if(isArray(extracted, 1) && extracted[1]) return extracted[1];
+    return null
+}
