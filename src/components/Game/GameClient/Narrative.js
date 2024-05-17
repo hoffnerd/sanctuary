@@ -23,7 +23,7 @@ import { checkRoleAccessLevel, findChapter, isArray, isObj } from "@/util";
 //______________________________________________________________________________________
 // ===== Constants =====
 
-const defaultNarrativeObj = { prerequisites:[], contentCharacters:40, waitTime:nextNarrativeInterval }
+const defaultNarrativeObj = { prerequisites:[], waitTime:nextNarrativeInterval, content:null }
 
 
 
@@ -84,9 +84,17 @@ export default function Narrative({ saveData }){
         return initialized && metPrerequisites && (!narrative.includes(narrativeIdToCheck))
     }
 
+    const getContentTextLength = (content) => {
+        if(content instanceof Function){
+            const { contentTextLength } = content({});
+            return contentTextLength;
+        }
+        return 0;
+    }
+
     const shouldDoNextNarrative = () => {
         if(!(isArray(narrative) && isObj(narrativeData, [ narrative[narrative.length-1] ]))) return { shouldDo:false };
-        const { id:mostRecentNarrativeId, nextNarrative, contentCharacters, waitTime  } = { ...defaultNarrativeObj, ...narrativeData[narrative[narrative.length-1]] };
+        const { id:mostRecentNarrativeId, nextNarrative, waitTime, content } = { ...defaultNarrativeObj, ...narrativeData[narrative[narrative.length-1]] };
         if(!(mostRecentNarrativeId && nextNarrative)) return { shouldDo:false };
         const nextNarrativeObj = isObj(narrativeData, [nextNarrative]) ? narrativeData[nextNarrative] : null;
         if(!isObj(nextNarrativeObj, ["id"])) return { shouldDo:false };
@@ -94,7 +102,7 @@ export default function Narrative({ saveData }){
         return { 
             id,
             shouldDo: shouldDoThisNarrative(id), 
-            timeoutTime: (contentCharacters * typingCharacterInterval) + waitTime 
+            timeoutTime: (getContentTextLength(content) * typingCharacterInterval) + waitTime 
         }
     }
 

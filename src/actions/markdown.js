@@ -48,7 +48,7 @@ export const readMarkdownFileById = async (endPath="", id) => {
     const { data, content } = matter( await fs.promises.readFile(fullPath, "utf8") );
 
     const html = await parser.process(content);
-    const date = data.date;
+    const date = new Date(data.date);
 
     return {
         ...data,

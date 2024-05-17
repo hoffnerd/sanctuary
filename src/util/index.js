@@ -103,8 +103,8 @@ export const convertObjToArray = (obj) => {
  */
 export const findChapter = (id) => {
     let regString = "C(.+)";
-    const nestedAmount = id && id.split(".").length-1
-    for (let i = 1; i < nestedAmount; i++){ regString += ".(.+)" }
+    const nestedAmount = id && id.split(".").length
+    for (let i = 1; i < nestedAmount; i++){ regString += "\\.(.+)" }
 
     const reg = new RegExp(regString);
     const extracted = reg.exec(id);

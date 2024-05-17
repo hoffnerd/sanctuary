@@ -9,10 +9,10 @@ import ReadableTime from "./ReadableTime";
 // Styles ---------------------------------------------------------------------------
 import styles from "@/styles/components/SaveFile.module.css";
 // Data------------------------------------------------------------------------------
-import { chapterNames } from "@/data/game/chapterNames";
+import { chapterNames } from "@/data/game/narrative/chapters";
 import { defaultSaveData } from "@/data/defaultSaveData";
 // Other-----------------------------------------------------------------------------
-import { isObj } from "@/util";
+import { findChapter, isArray, isObj } from "@/util";
 
 
 
@@ -47,7 +47,7 @@ export default function SaveFile({ saveFile }) {
     //______________________________________________________________________________________
     // ===== Component Constants =====
     const { id, userId, name, type, saveData, inGameTime, createdAt, updatedAt } = isObj(saveFile) ? { ...defaultSaveFile, ...saveFile } : defaultSaveFile;
-    const { resources, chapter } = isObj(saveData) ? { ...defaultSaveData, ...saveData } : defaultSaveData;
+    const { resources, narrative } = isObj(saveData) ? { ...defaultSaveData, ...saveData } : defaultSaveData;
 
 
     //______________________________________________________________________________________
@@ -55,10 +55,12 @@ export default function SaveFile({ saveFile }) {
 
     const renderInGameTime = () => <ReadableTime timeInSeconds={inGameTime}/>
 
-    const renderNameAndChapter = () => <>
-        {name} | Chapter {chapter || 0}:&nbsp;
-        {chapterNames[(chapter || chapter === 0) && chapter < chapterNames.length ? chapter : chapterNames.length-1]}
-    </>
+    const renderNameAndChapter = () => {
+        const mostRecentNarrativeId = isArray(narrative) && narrative[narrative.length-1];
+        const chapterId = mostRecentNarrativeId ? findChapter(mostRecentNarrativeId) : null;
+        const chapterName = chapterId && chapterNames[`C${chapterId}`] ? chapterNames[`C${chapterId}`] : "How did you get here?";
+        return <>{name} | {chapterName}</>
+    }
 
     const renderStartedDate = () => <>Started: {format(createdAt, "MMM dd, yyyy")}</>
 
@@ -156,7 +158,7 @@ export default function SaveFile({ saveFile }) {
     //______________________________________________________________________________________
     // ===== Component Return  =====
 
-    if (!(id && name && type)) return console.error("SaveFile Invalid!", { saveFile, save: { id, userId, name, chapter, type, createdAt, updatedAt } });
+    if (!(id && name && type)) return console.error("SaveFile Invalid!", { saveFile, save: { id, userId, name, type, createdAt, updatedAt } });
     
     return (
         <div className="py-5">
