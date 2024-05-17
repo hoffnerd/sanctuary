@@ -1,0 +1,226 @@
+/*
+    CSS Module to apply classic html element styles, with optional override variables. This exists due to Tailwind Preflight clearing all styles.
+
+    Note: This is not all default styles just the ones we have noticed over time and the ones that we would like to behave like normal.
+    Please add more as you see fit. Try to keep it in alphabetical order. Link of default values: https://www.w3schools.com/cssref/css_default_values.php
+    Keep in mind, we also pretty accustomed to the default bootstrap styles. If the regular defaults are not getting you expected output, try to find Bootstrap5's styles for that element.
+
+
+    Recommended way to import into your ReactJS/NextJS components:
+    import classicStyles from "@/styles/Classic.module.css";
+
+    All of these can be used in two ways:
+    - Have a containing div with a class of `classicStyles.classic` so the classic styles will be applied to all elements within that div
+    - Put the class of `classicStyles.classic` on the individual element you want the styles to be applied to for more control over your own styles
+
+
+
+    ______________________________________________________________________________________
+
+    Optional variables to add to your `root` or custom class to change these styles (defaults defined in the "classic" class)
+
+    variable names are defined as the following: 
+    --{element}-{pseudo}-{css property}
+
+    Where:
+    - {element} = the html element you want the style to be applied to
+    - {pseudo} = any pseudo class, if needed. For example :link or :hover
+    - {css property} = the actually css property you are changing
+
+
+
+    Variables:
+    
+    --a-link-color
+    --a-link-text-decoration
+    --a-visited-color
+    --a-visited-text-decoration
+
+    --li-display
+
+    --ol-display
+    --ol-list-style-type
+    --ol-padding-left
+
+    --ul-display
+    --ul-list-style-type
+    --ul-padding-left
+
+
+    ______________________________________________________________________________________
+
+    Other Notes:
+    - `cursor` property seems to be unaffected by Tailwind Preflight
+    - No variables for <h#> elements (h1, h2, h3, h4, h5, h6) as these are better controlled through your own CSS or Tailwind
+    - Removed all `margin` properties as its best to stay away from margin unless you absolutely have to use it.
+*/
+
+
+
+/*______________________________________________________________________________________*/
+/* ===== Class with the defined styles ===== */
+
+.classic{
+
+    /* <a> element */
+    --_a-link-color: var(--a-link-color, #0d6efd); /* #0000FF */
+    --_a-link-text-decoration: var(--a-link-text-decoration, underline);
+    --_a-visited-color: var(--a-visited-color, #800080);
+    --_a-visited-text-decoration: var(--a-link-visited-decoration, underline);
+
+    /* <li> element */
+    --_li-display: var(--li-display, list-item);
+
+    /* <ol> element */
+    --_ol-display: var(--ol-display, block);
+    --_ol-list-style-type: var(--ol-list-style-type, decimal);
+    --_ol-padding-left: var(--ol-padding-left, 40px);
+
+    /* <ul> element */
+    --_ul-display: var(--ul-display, block);
+    --_ul-list-style-type: var(--ul-list-style-type, disc);
+    --_ul-padding-left: var(--ul-padding-left, 40px);
+}
+
+
+
+/*______________________________________________________________________________________*/
+/* ===== <a> element ===== */
+
+.classic a:link,
+a:link.classic{
+    color: var(--_a-link-color);
+    text-decoration: var(--_a-link-text-decoration);
+    /* cursor: pointer; */
+}
+
+.classic a:visited,
+a:visited.classic{
+    color: var(--_a-visited-color);
+    text-decoration: var(--_a-visited-text-decoration);
+    /* cursor: pointer; */
+}
+
+
+
+/*______________________________________________________________________________________*/
+/* ===== <h#> elements ===== */
+
+.classic h1,
+h1.classic{
+    display: block;
+    font-size: 2em;
+    font-weight: bold;
+    /* margin-top: 0.67em;
+    margin-bottom: 0.67em;
+    margin-left: 0;
+    margin-right: 0; */
+}
+
+.classic h2,
+h2.classic{
+    display: block;
+    font-size: 1.5em;
+    font-weight: bold;
+    /* margin-top: 0.83em;
+    margin-bottom: 0.83em;
+    margin-left: 0;
+    margin-right: 0; */
+}
+
+.classic h3,
+h3.classic{
+    display: block;
+    font-size: 1.17em;
+    font-weight: bold;
+    /* margin-top: 1em;
+    margin-bottom: 1em;
+    margin-left: 0;
+    margin-right: 0; */
+}
+
+.classic h4,
+h4.classic{
+    display: block;
+    font-weight: bold;
+    /* margin-top: 1.33em;
+    margin-bottom: 1.33em;
+    margin-left: 0;
+    margin-right: 0; */
+}
+
+.classic h5,
+h5.classic{
+    display: block;
+    font-size: .83em;
+    font-weight: bold;
+    /* margin-top: 1.67em;
+    margin-bottom: 1.67em;
+    margin-left: 0;
+    margin-right: 0; */
+}
+
+.classic h6,
+h6.classic{
+    display: block;
+    font-size: .67em;
+    font-weight: bold;
+    /* margin-top: 2.33em;
+    margin-bottom: 2.33em;
+    margin-left: 0;
+    margin-right: 0; */
+}
+
+
+
+/*______________________________________________________________________________________*/
+/* ===== <li> element ===== */
+
+.classic li,
+li.classic{
+    display: var(--_li-display);
+}
+
+
+
+/*______________________________________________________________________________________*/
+/* ===== <ol> element ===== */
+
+.classic ol,
+ol.classic{
+    display: var(--_ol-display);
+    list-style-type: var(--_ol-list-style-type);
+    padding-left: var(--_ol-padding-left);
+    /* margin-top: 1em;
+    margin-bottom: 1em;
+    margin-left: 0;
+    margin-right: 0; */
+}
+
+
+
+/*______________________________________________________________________________________*/
+/* ===== <ul> element ===== */
+
+.classic ul,
+ul.classic{
+    display: var(--_ul-display);
+    list-style-type: var(--_ul-list-style-type);
+    padding-left: var(--_ul-padding-left);
+    /* margin-top: 1em;
+    margin-bottom: 1em;
+    margin-left: 0;
+    margin-right: 0; */
+}
+
+
+
+/*______________________________________________________________________________________*/
+/* ===== copy/paste for ease (replace `element`) ===== */
+
+/*
+.classic element,
+element.classic{
+    
+}
+*/

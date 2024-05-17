@@ -1,9 +1,10 @@
-// React/Next -----------------------------------------------------------------------
+// Packages -------------------------------------------------------------------------
+import Link from 'next/link';
 // Styles ---------------------------------------------------------------------------
 import styles from "@/styles/components/SaveFile.module.css";
+import classicStyles from "@/styles/Classic.module.css";
 // Components -----------------------------------------------------------------------
 import { readAllMarkdownFiles } from '@/actions/markdown';
-import Link from 'next/link';
 import { format } from "date-fns";
 // Data -----------------------------------------------------------------------------
 // Other ----------------------------------------------------------------------------
@@ -36,7 +37,7 @@ export default async function Page() {
                         <div className="p-10">
                             <h2 className="text-2xl font-black">{title}</h2>
                             <h3 className="text-lg font-black pb-5">{format(date, "MMMM do, yyyy")}</h3>
-                            <div dangerouslySetInnerHTML={{ __html: html }} />
+                            <div className={classicStyles.classic} dangerouslySetInnerHTML={{ __html: html }} />
                         </div>
                     </div>
                 </div>

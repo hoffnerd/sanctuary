@@ -44,10 +44,14 @@ export default function Choices({}){
     //______________________________________________________________________________________
     // ===== Render Functions =====
     const renderChoices = () => {
-        if(isArray(choices)) return choices.map(choice => {
+        let choiceDisplays = [];
+        isArray(choices) && choices.forEach(choice => {
             const id = isObj(choice, [ "id" ]) ? choice.id : choice;
-            return <ChoiceDisplay key={id} choice={choice} narrative={narrative} />
+            if(isArray(narrative) && narrative.includes(id)) return;
+            choiceDisplays.push( <ChoiceDisplay key={id} choice={choice} narrative={narrative} /> );
         });
+
+        if(isArray(choiceDisplays)) return choiceDisplays;
         return "No choices to make right now...";
     }
 
