@@ -18,6 +18,8 @@ export const chapters = {
             { component:"h2", className:"text-xl font-bold", text:chapterNames.C00 }
         ]),
         nextNarrative: "C00.1",
+        shouldAutoContinue: true,
+        shouldShowContinueBtn: false,
     },
     "C0": {
         id: "C0",
@@ -26,5 +28,7 @@ export const chapters = {
             { component:"h2", className:"text-xl font-bold", text:chapterNames.C0 }
         ]),
         nextNarrative: "C0.1",
+        shouldAutoContinue: true,
+        shouldShowContinueBtn: false,
     },
 }
