@@ -14,6 +14,12 @@ import { isArray, isObj } from "@/util";
 import ChoiceDisplay from "./ChoiceDisplay";
 
 
+const defaultNarrativeObj = { 
+    choices: [], 
+    nextNarrative: null, 
+    shouldShowContinueBtn: true,
+}
+
 
 //______________________________________________________________________________________
 // ===== Component  =====
@@ -37,7 +43,14 @@ export default function Choices({}){
     // ===== Constants =====
     const { saveData: { narrative } } = saveFile;
     const latestNarrativeId = isArray(narrative) ? narrative[narrative.length-1] : null;
-    const choices = latestNarrativeId ? narrativeData[latestNarrativeId].choices : null;
+    const { 
+        choices, 
+        nextNarrative, 
+        shouldShowContinueBtn 
+    } = latestNarrativeId && isObj(narrativeData[latestNarrativeId]) 
+        ? { ...defaultNarrativeObj, ...narrativeData[latestNarrativeId] } 
+        : { ...defaultNarrativeObj };
+
 
 
 
@@ -48,10 +61,13 @@ export default function Choices({}){
         isArray(choices) && choices.forEach(choice => {
             const id = isObj(choice, [ "id" ]) ? choice.id : choice;
             if(isArray(narrative) && narrative.includes(id)) return;
-            choiceDisplays.push( <ChoiceDisplay key={id} choice={choice} narrative={narrative} /> );
+            choiceDisplays.push( <ChoiceDisplay key={id} choice={choice} /> );
         });
 
         if(isArray(choiceDisplays)) return choiceDisplays;
+        if(nextNarrative && shouldShowContinueBtn) return (
+            <ChoiceDisplay key={nextNarrative} choice={{ id:nextNarrative, display:"Continue" }} />
+        )
         return "No choices to make right now...";
     }
 

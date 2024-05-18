@@ -14,7 +14,7 @@ import useSaveGame from "@/hooks/useSaveGame";
 
 //______________________________________________________________________________________
 // ===== Component  =====
-export default function ChoiceDisplay({ choice, narrative }){
+export default function ChoiceDisplay({ choice }){
 
     //______________________________________________________________________________________
     // ===== Hooks =====
