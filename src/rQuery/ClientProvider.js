@@ -12,8 +12,9 @@ export default function ClientProvider ({ children }) {
     const [ queryClient ] = useState(()=> new QueryClient({ 
         defaultOptions: { 
             queries: { 
-                staleTime: Infinity, 
-                // refetchInterval: 6 * 1000
+                staleTime: 1000, 
+                // refetchOnWindowFocus: true,
+                // refetchInterval: 1000,
             }
         } 
     }));

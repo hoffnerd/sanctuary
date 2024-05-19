@@ -1,0 +1,20 @@
+.draggable {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    max-width: 250px;
+    overflow: hidden;
+    border: 1px solid #dedede;
+}
+
+.draggablePanel {
+    background-color: #020817;
+    cursor: move;
+    border-bottom-width: 1px;
+    border-bottom-color: #dedede;
+}
+
+.draggableContent {
+    padding: 15px;
+    background-color: #020817;
+}

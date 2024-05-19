@@ -27,7 +27,6 @@ export default function GameDialog({ }) {
 
     //______________________________________________________________________________________
     // ===== Stores =====
-    const debugMode = useDebugModeStore((state) => state.debugMode);
     const { 
         isOpen, 
         isFullScreen,
@@ -59,11 +58,6 @@ export default function GameDialog({ }) {
     //______________________________________________________________________________________
     // ===== Component Return  =====
     return <>
-        {(checkRoleAccessLevel(session, "ADMIN") && debugMode) && <>
-            <Button variant="link" onClick={()=>setDialog({ isOpen:true, content:"Hello World" })}>
-                Debug Open Dialog
-            </Button>
-        </>}
         <Dialog open={isOpen} onOpenChange={close}>
             <DialogContent 
                 style={{ maxWidth:"unset", display:"unset" }} 

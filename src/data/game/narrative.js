@@ -19,6 +19,7 @@ export const narrativeData = {
         id: "",
         title: "",
         prerequisites: [ "", ],
+        blocked: [ "", ],
         rewards: {},
         content: <></>,
         choices: [
