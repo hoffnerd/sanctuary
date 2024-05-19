@@ -101,6 +101,66 @@ const calculateAbility = (playerAbilities, abilityKey, valueToAdd) => {
     return abilities[abilityKey] + valueToAdd;
 }
 
+const handleRewards = (saveData, narrativeToAdd) => {
+    const narrativeObj = narrativeData[narrativeToAdd];
+
+    let playerAbilities = isObj(saveData.abilities) ? saveData.abilities : {}
+    let editedSaveData = { ...saveData };
+
+    isObj(narrativeObj.rewards) && Object.keys(narrativeObj.rewards).forEach(rewardType => {
+        switch (rewardType) {
+            case "items":
+                editedSaveData.inventory = isArray(saveData.inventory) ? [ ...saveData.inventory, ...narrativeObj.rewards.items ] : [ ...narrativeObj.rewards.items ];
+                break;
+            case "abilities":
+                isObj(narrativeObj.rewards) && Object.keys(narrativeObj.rewards.abilities).forEach((abilityKey => {
+                    let keyToUse = abilityKey
+                    let playerValue = narrativeObj.rewards.abilities[keyToUse];
+                    if(abilityKey === "random"){
+                        const randomKeys = Object.keys(narrativeObj.rewards.abilities.random);
+                        keyToUse = randomKeys[Math.floor(Math.random() * randomKeys.length)];
+                        playerValue = narrativeObj.rewards.abilities.random[keyToUse];
+                    }
+                    playerAbilities[keyToUse] = calculateAbility(playerAbilities, keyToUse, playerValue);
+                }));
+                if(isObj(playerAbilities)) editedSaveData.abilities = playerAbilities;
+                break;
+            default: break;
+        }
+    });
+
+    return editedSaveData;
+}
+
+const checkAllowedToAddNarrative = (narrative, narrativeToAdd) => {
+    if(!isArray(narrative)) return true;
+
+    let narrativesBlocked = [ ...narrative ];
+    narrative.forEach(narrativeId => {
+        const narrativeObj = narrativeData[narrativeId];
+        narrativeObj && isArray(narrativeObj.blocked) && narrativeObj.blocked.forEach(
+            (blockedNarrativeId) => narrativesBlocked.push(blockedNarrativeId)
+        );
+    });
+    if(narrativesBlocked.includes(narrativeToAdd)) return false;
+
+    const latestNarrativeObj = narrativeData[narrative[narrative.length-1]];
+    if(isObj(latestNarrativeObj, ["nextNarrative"]) && latestNarrativeObj.nextNarrative === narrativeToAdd) return true;
+    if(latestNarrativeObj && isArray(latestNarrativeObj.choices)){
+        let choiceAllowed = false;
+        for (let i = 0; i < latestNarrativeObj.choices.length; i++) {
+            const choice = latestNarrativeObj.choices[i];
+            if(choice === narrativeToAdd || (isObj(choice, ["id"]) && choice.id === narrativeToAdd)){
+                choiceAllowed = true;
+                break;
+            }
+        }
+        return choiceAllowed;
+    }
+
+    return false;
+} 
+
 /**
  * Updates the in-game time and the save date of a save file in a database.
  * @param id - string, unique identifier of the save file that you want to update.
@@ -123,32 +183,12 @@ export const updateSaveFile = async ({id, inGameTime, additionalSaveData, narrat
         if(isObj(saveFile.saveData) && isObj(additionalSaveData)) saveData = { ...defaultSaveData, ...saveFile.saveData, ...additionalSaveData };
         else if(isObj(saveFile.saveData)) saveData = { ...defaultSaveData, ...saveFile.saveData };
 
-        let playerAbilities = isObj(saveData.abilities) ? saveData.abilities : {}
 
-        if(narrativeToAdd){
-            saveData.narrative.push(narrativeToAdd)
-            const narrativeObj = narrativeData[narrativeToAdd];
-            isObj(narrativeObj.rewards) && Object.keys(narrativeObj.rewards).forEach(rewardType => {
-                switch (rewardType) {
-                    case "items":
-                        saveData.inventory = isArray(saveData.inventory) ? [ ...saveData.inventory, ...narrativeObj.rewards.items ] : [ ...narrativeObj.rewards.items ];
-                        break;
-                    case "abilities":
-                        isObj(narrativeObj.rewards) && Object.keys(narrativeObj.rewards.abilities).forEach((abilityKey => {
-                            let keyToUse = abilityKey
-                            let playerValue = narrativeObj.rewards.abilities[keyToUse];
-                            if(abilityKey === "random"){
-                                const randomKeys = Object.keys(narrativeObj.rewards.abilities.random);
-                                keyToUse = randomKeys[Math.floor(Math.random() * randomKeys.length)];
-                                playerValue = narrativeObj.rewards.abilities.random[keyToUse];
-                            }
-                            playerAbilities[keyToUse] = calculateAbility(playerAbilities, keyToUse, playerValue);
-                        }));
-                        if(isObj(playerAbilities)) saveData.abilities = playerAbilities;
-                        break;
-                    default: break;
-                }
-            });
+        if(narrativeToAdd && checkAllowedToAddNarrative(saveData.narrative, narrativeToAdd)){
+            saveData.narrative.push(narrativeToAdd);
+
+            const editedSaveData = handleRewards(saveData, narrativeToAdd);
+            saveData = { ...editedSaveData };
         }
 
         return await prisma.saveFile.update({

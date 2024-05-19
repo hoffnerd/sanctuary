@@ -39,15 +39,11 @@ export default function Manager(){
     if(!isObj(saveFile, ["id"])) return;
 
     return (
-        <Debugger>
+        <Debugger saveFile={saveFile}>
             <Dialog/>
-            <Gizmo saveFile={saveFile} />
-
             <InGameTime propInGameTime={saveFile.inGameTime}/>
             <SaveGame propInGameTime={saveFile.inGameTime}/>
-
             <Narrative saveData={saveFile?.saveData}/>
-
         </Debugger>
     )
         

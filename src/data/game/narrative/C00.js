@@ -43,6 +43,7 @@ export const C00 = {
             `"Does it matter? I am merely a guide." it replies calmly.`
         ]),
         nextNarrative: "C00.2",
+        blocked: [ "C00.1.b" ],
     },
     "C00.1.b": {
         id: "C00.1.b",
@@ -53,6 +54,7 @@ export const C00 = {
             `"Do you not remember?" it asks, condemning and dry.`
         ]),
         nextNarrative: "C00.2",
+        blocked: [ "C00.1.a" ],
     },
     "C00.2": {
         id: "C00.2",
@@ -80,6 +82,7 @@ export const C00 = {
             `"The world is ending, if you're not scared you're insane. Bravery without a little fear will get you killed."`
         ]),
         nextNarrative: "C00.3",
+        blocked: [ "C00.2.b", "C00.2.c" ],
     },
     "C00.2.b": {
         id: "C00.2.b",
@@ -90,6 +93,7 @@ export const C00 = {
             `"You're going to have to do it anyway. We're holding those monsters back, but you need to go, NOW."`
         ]),
         nextNarrative: "C00.3",
+        blocked: [ "C00.2.a", "C00.2.c" ],
     },
     "C00.2.c": {
         id: "C00.2.c",
@@ -100,6 +104,7 @@ export const C00 = {
             `"As long as you only point this weapon at the enemy you have nothing to worry about. You're going to have to try."`
         ]),
         nextNarrative: "C00.3",
+        blocked: [ "C00.2.a", "C00.2.b" ],
     },
     "C00.3": {
         id: "C00.3",
@@ -115,10 +120,10 @@ export const C00 = {
             { id: "C00.4.3", display: "West" },
         ],
     },
-    "C00.4.0": { ...primitives["C00.4"], id:"C00.4.0" },
-    "C00.4.1": { ...primitives["C00.4"], id:"C00.4.1" },
-    "C00.4.2": { ...primitives["C00.4"], id:"C00.4.2" },
-    "C00.4.3": { ...primitives["C00.4"], id:"C00.4.3" },
+    "C00.4.0": { ...primitives["C00.4"], id:"C00.4.0", blocked: [ "C00.4.1", "C00.4.2", "C00.4.3" ] },
+    "C00.4.1": { ...primitives["C00.4"], id:"C00.4.1", blocked: [ "C00.4.0", "C00.4.2", "C00.4.3" ] },
+    "C00.4.2": { ...primitives["C00.4"], id:"C00.4.2", blocked: [ "C00.4.0", "C00.4.1", "C00.4.3" ] },
+    "C00.4.3": { ...primitives["C00.4"], id:"C00.4.3", blocked: [ "C00.4.0", "C00.4.1", "C00.4.2" ] },
     "C00.4.a": {
         id: "C00.4.a",
         title: "Throw the gun down",
@@ -128,6 +133,7 @@ export const C00 = {
             `The haze begins to shroud your vision, ethereal curtains covering your eyes. No shaking your head can delay it this time. The last things you remember are the fearful looks on the faces of the people, and another scream, this time of a woman.`
         ]),
         nextNarrative: "C00.5",
+        blocked: [ "C00.4.b" ],
     },
     "C00.4.b": {
         id: "C00.4.b",
@@ -138,6 +144,7 @@ export const C00 = {
             `The kick of the gun was much stronger than you were expecting. In the muzzle's flashes, you catch a couple glimpses of the creature's six eyes. Thick fur surrounds its neck and vitals, seeming to swallow up a bullet or two. Whatever shots hit did not do much to slow it down, however, as it lunges towards you, knocking the weapon out of your hands, and you close your eyes as it's sharp teeth come down upon you.`
         ]),
         nextNarrative: "C00.5",
+        blocked: [ "C00.4.a" ],
     },
     "C00.5": {
         id: "C00.5",
@@ -165,6 +172,7 @@ export const C00 = {
             `"Your senses fall short explaining things they do not understand. You're here, aren't you? You are until you are not."`,
         ]),
         nextNarrative: "C00.6",
+        blocked: [ "C00.5.b", "C00.5.c" ],
     },
     "C00.5.b": {
         id: "C00.5.b",
@@ -179,6 +187,7 @@ export const C00 = {
             `"Something poorly misunderstood. A scourge. Perhaps soon, it will be you."`,
         ]),
         nextNarrative: "C00.6",
+        blocked: [ "C00.5.a", "C00.5.c" ],
     },
     "C00.5.c": {
         id: "C00.5.c",
@@ -193,6 +202,7 @@ export const C00 = {
             `"Some answers are harder to come by than others. Would you ask the eyeless man the color of the sky?."`,
         ]),
         nextNarrative: "C00.6",
+        blocked: [ "C00.5.a", "C00.5.b" ],
     },
     "C00.6": {
         id: "C00.6",
@@ -255,6 +265,7 @@ export const C00 = {
             `"The path that has brought you here. It is different for each of us, but we all come to this place. I am here for you as others were here for me."`,
         ]),
         nextNarrative: "C00.end.dev.0",
+        blocked: [ "C00.7.b", "C00.7.c" ],
     },
     "C00.7.b": {
         id: "C00.7.b",
@@ -269,6 +280,7 @@ export const C00 = {
             `"A being vastly different than that which went in. A twisted, vile thing."`,
         ]),
         nextNarrative: "C00.end.dev.0",
+        blocked: [ "C00.7.a", "C00.7.c" ],
     },
     "C00.7.c": {
         id: "C00.7.c",
@@ -277,6 +289,7 @@ export const C00 = {
             `"It does render you speechless your first time seeing it, does it not?" The man asks, without taking his eyes off the cocoon. `,
         ]),
         nextNarrative: "C00.end.dev.0",
+        blocked: [ "C00.7.a", "C00.7.b" ],
     },
     
     "C00.end.dev.0": { ...primitives["C00.end"], id:"C00.end.dev.0" },
