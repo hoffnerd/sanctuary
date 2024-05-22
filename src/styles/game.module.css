@@ -105,32 +105,32 @@
 /* ______________________________________________________________________________________ */
 /* ===== Sections ===== */
 
-.gameGrid .panelSpacing{
+.panelSpacing{
     padding: var(--corePadding);
 }
 
-.gameGrid .panel {
+.panel {
     border-width: 5px;
     border-radius: 25px;
     overflow: hidden;
     height: 100%;
 }
 
-.gameGrid .panel .innerPanel{
+.panel .innerPanel{
     overflow: auto;
     height: 100%;
     padding: var(--corePadding);
 }
 
-/* .gameGrid .panel.half{
+/* .panel.half{
     --height: calc( (var(--_fullHeight) / 2) - (var(--corePadding) * 1.25) )
 }
 
-.gameGrid .panel.fraction_1_3rd{
+.panel.fraction_1_3rd{
     --height: calc( (var(--_fullHeight) / 3) - (var(--corePadding) * 1.25) )
 }
 
-.gameGrid .panel.fraction_2_3rd{
+.panel.fraction_2_3rd{
     --height: calc( ((var(--_fullHeight) / 3) * 2) - (var(--corePadding) * 1.25) )
 } */
 
