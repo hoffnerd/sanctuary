@@ -58,7 +58,7 @@ export const useCombatStore = create((set) => ({
             const { newInitiativeOrder, newBackgroundTurnCount } = getNextInitiativeOrder(entities, initiativeOrder, backgroundTurnCount);
             return { 
                 initiativeOrder: newInitiativeOrder,
-                roundCount: Math.floor(backgroundTurnCount / initiativeOrder.length),
+                roundCount: Math.floor(newBackgroundTurnCount / initiativeOrder.length),
                 turnCount: turnCount+1,
                 backgroundTurnCount: newBackgroundTurnCount,
             }
