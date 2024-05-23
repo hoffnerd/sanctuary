@@ -7,6 +7,7 @@ import { create } from 'zustand'
 
 
 const defaultEntityObj = {
+    isFriendly: false,
     isDead: false,
     isHidden: true,
 };
@@ -29,7 +30,12 @@ export const useCombatStore = create((set) => ({
 
 
 
-    startCombat: (entities) => {
+    startCombat: (entitiesToSet) => {
+        let entities = { ...entitiesToSet }
+        Object.keys(entities).forEach(key => {
+            entities[key] = { ...defaultEntityObj, ...entities[key] };
+        });
+
         const entityKeys = Object.keys(entities);
         const initiativeOrder = shuffleArray([ ...entityKeys ]);
         set(() => ({ ...defaultCombatStore, entities, initiativeOrder, startingEntityKey:initiativeOrder[0] }))
@@ -49,8 +55,8 @@ export const useCombatStore = create((set) => ({
             newInitiativeOrder.splice(newInitiativeOrder.length, 0, removed[0]);
 
             const currentEntityKey = newInitiativeOrder[0];
-            const { isDead, isHidden } = isObj(entities[currentEntityKey]) ? entities[currentEntityKey] : defaultEntityObj
-            if(isDead || isHidden) return getNextInitiativeOrder(newInitiativeOrder, newBackgroundTurnCount, depth+1);
+            const { isDead, isHidden } = entities[currentEntityKey];
+            if(isDead || isHidden) return getNextInitiativeOrder(entities, newInitiativeOrder, newBackgroundTurnCount, depth+1);
             return { newInitiativeOrder, newBackgroundTurnCount };
         }
  

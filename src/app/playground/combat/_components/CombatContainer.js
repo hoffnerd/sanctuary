@@ -23,7 +23,7 @@ export default function CombatContainer(){
                 <Panel/>
             </div>
             <div className={`${styles.section} ${styles.initiativeOrder}`}>
-                <Panel>
+                <Panel innerClassName="h-[102%] text-nowrap overflow-x-auto overflow-y-hidden pt-3 px-2 flex" hasDefaultInnerClass={false}>
                     <InitiativeOrder/>
                 </Panel>
             </div>

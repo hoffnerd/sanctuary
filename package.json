@@ -28,6 +28,7 @@
     "clsx": "^2.1.0",
     "cmdk": "^0.2.1",
     "date-fns": "^3.3.1",
+    "framer-motion": "^11.2.6",
     "gh-pages": "^6.1.1",
     "gray-matter": "^4.0.3",
     "lucide-react": "^0.338.0",
