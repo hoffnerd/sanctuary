@@ -6,6 +6,7 @@ import Manager from "./CombatClient/Manager";
 import { Panel } from "@/components/MicroComponents";
 import InitiativeOrder from "./Panels/InitiativeOrder";
 import Actions from "./Panels/Actions";
+import BattleField from "./Panels/BattleField";
 // Other-----------------------------------------------------------------------------
 
 
@@ -28,7 +29,9 @@ export default function CombatContainer(){
                 </Panel>
             </div>
             <div className={`${styles.section} ${styles.colosseum}`}>
-                <Panel/>
+                <Panel>
+                    <BattleField/>
+                </Panel>
             </div>
             <div className={`${styles.section} ${styles.actions}`}>
                 <Panel innerClassName="h-full" hasDefaultInnerClass={false}>

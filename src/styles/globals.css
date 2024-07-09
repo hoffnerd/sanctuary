@@ -108,6 +108,12 @@
 /* ______________________________________________________________________________________ */
 /* ===== Common ===== */
 
+.flexItemsEvenly {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
 .invisibleText{
     color: rgba(0,0,0,0) !important;
     text-shadow: unset !important;
