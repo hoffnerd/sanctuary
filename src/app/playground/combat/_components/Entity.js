@@ -6,7 +6,9 @@ import { useCombatStore } from "@/stores/combat";
 import { Progress } from "@/components/shadcn/ui/progress";
 // Styles -------------------------------------------------------------------------
 import styles from "@/styles/components/Entity.module.css";
+// Data ---------------------------------------------------------------------------
 import { maxAdrenalinePoints } from "@/data/_config";
+// Other --------------------------------------------------------------------------
 
 
 
@@ -14,25 +16,14 @@ import { maxAdrenalinePoints } from "@/data/_config";
 // ===== Constants =====
 
 const apClass = "neonBackground neonBoxShadowGlow yellow";
+const buttonClass = "hover:bg-accent hover:text-accent-foreground"
 
 
 
 //______________________________________________________________________________________
-// ===== Component =====
+// ===== Micro-Component =====
 
-export default function Entity({ className, entityKey }){
-
-    //______________________________________________________________________________________
-    // ===== Store =====
-	const entities = useCombatStore((state) => state.entities);
-
-
-
-    //______________________________________________________________________________________
-    // ===== Constants =====
-	const entityObj = entities[entityKey];
-
-
+const EntityContent = ({ entityObj }) => {
 
     //______________________________________________________________________________________
     // ===== Functions =====
@@ -52,21 +43,64 @@ export default function Entity({ className, entityKey }){
 
     //______________________________________________________________________________________
     // ===== Component Return =====
+    return (
+        <div className="h-full w-full p-2">
+            <h2 className="text-center text-md neonText neonTextGlow">{entityObj.display}</h2>
+            <div className="flex">
+                <p>AP:</p>
+                {renderAdrenalinePoints()}
+            </div>
+            <p className="text-left">HP: {entityObj.hp}/{entityObj.hpMax}</p>
+            <Progress 
+                indicatorClassName="neonBackground neonBoxShadowGlow green" 
+                value={(entityObj.hp/entityObj.hpMax)*100} 
+            />
+        </div>
+    )
+}
+
+
+
+//______________________________________________________________________________________
+// ===== Component =====
+
+export default function Entity({ className, entityKey }){
+
+    //______________________________________________________________________________________
+    // ===== Store =====
+	const entities = useCombatStore((state) => state.entities);
+	const initiativeOrder = useCombatStore((state) => state.initiativeOrder);
+    const attackSelected = useCombatStore((state) => state.attackSelected);
+    const setNextTurnState = useCombatStore((state) => state.setNextTurnState);
+
+
+
+    //______________________________________________________________________________________
+    // ===== Constants =====
+	const entityObj = entities[entityKey];
+    const currentTurnEntityKey = initiativeOrder[0]
+	const currentTurnEntityObj = currentTurnEntityKey ? entities[currentTurnEntityKey] : null;
+    // const attackObj = attackSelected ? attacksLibrary[attackSelected] : null;
+    const isOpposingForce = (entityObj.isFriendly && (!currentTurnEntityObj.isFriendly)) || ((!entityObj.isFriendly) && currentTurnEntityObj.isFriendly);
+    const classes = `${className} ${styles.entity} neonBorder neonBoxShadowGlow ${entityObj.isFriendly ? "blue" : "red"}`;
+
+
+
+    //______________________________________________________________________________________
+    // ===== Component Return =====
+
+	if(attackSelected && isOpposingForce) return (
+		<button 
+            className={`${classes} ${buttonClass}`}
+            onClick={() => setNextTurnState("attack", { targetEntityKey:entityKey })}
+        >
+            <EntityContent entityObj={entityObj} />
+		</button>
+	)
 
 	return (
-		<div className={`${className} ${styles.entity} neonBorder neonBoxShadowGlow ${entityObj.isFriendly ? "blue" : "red"}`}>
-            <div className="p-2">
-                <h2 className="text-center text-md neonText neonTextGlow">{entityObj.display}</h2>
-                <div className="flex">
-                    <p>AP:</p>
-                    {renderAdrenalinePoints()}
-                </div>
-                <p>HP: {entityObj.hp}/{entityObj.hpMax}</p>
-                <Progress 
-                    indicatorClassName="neonBackground neonBoxShadowGlow green" 
-                    value={(entityObj.hp/entityObj.hpMax)*100} 
-                />
-            </div>
+		<div className={classes}>
+            <EntityContent entityObj={entityObj} />
 		</div>
 	)
 }

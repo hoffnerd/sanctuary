@@ -68,7 +68,7 @@ export default function InitiativeOrder() {
         let initiativeOrderToRender = [];
         activeInitiativeOrder.forEach((entityKey, index) => {
             const entityObj = entities[entityKey];
-            if(isObj(entityObj, ["isHidden", "isDead"], false)) return;
+            if(isObj(entityObj, ["isHidden", "isDead", "isUnconscious"], false)) return;
             initiativeOrderToRender.push(
                 <Fragment key={entityKey}>
                     {entityKey !== "-" 

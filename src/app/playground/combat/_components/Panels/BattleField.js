@@ -26,21 +26,6 @@ export default function BattleField(){
     
     //______________________________________________________________________________________
     // ===== Render Functions =====
-    
-    const renderEntitiesSelectButtons = () => {
-        let cellsToRender = [];
-
-        for (let i = 1; i <= 4; i++) {
-            cellsToRender.push(
-                <div key={i} className={`${styles[`selection_${i}`]} flexItemsEvenly`}>
-                    <div>f_{i}</div>
-                    <div>e_{i}</div>
-                </div>
-            )
-        }
-
-        return cellsToRender
-    }
 
     const renderEntities = () => {
         let friendlyCount = 0;
@@ -73,6 +58,7 @@ export default function BattleField(){
                 />
             )
 
+            // Render the finger pointer
             const position = `r${isFriendly ? friendlyCount : enemyCount}_c${isFriendly ? 2 : 3}`;
             entitiesToRender.push(
                 <SelectEntityButton
