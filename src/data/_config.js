@@ -15,3 +15,6 @@ export const saveInterval = 300;
 
 /** @constant {Number}, the amount of time before we auto run the the next narrative, if there are no choices in microseconds */
 export const nextNarrativeInterval = 2500; 
+
+/** @constant {Number}, the maximum amount of adrenaline points an entity may have in combat */
+export const maxAdrenalinePoints = 5; 

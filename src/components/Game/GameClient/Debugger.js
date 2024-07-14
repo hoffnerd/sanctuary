@@ -51,13 +51,5 @@ export default function Debugger({ children, saveFile }){
                 </Draggable>
             ) : children}
         </div>
-    )
-    return (
-        <div className="absolute z-10">
-            <div className={checkRoleAccessLevel(session, "ADMIN") && debugMode ? "bg-background p-5" : ""}>
-                {children}
-            </div>
-        </div>
-    )
-        
+    )   
 }

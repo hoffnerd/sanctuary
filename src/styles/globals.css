@@ -108,6 +108,12 @@
 /* ______________________________________________________________________________________ */
 /* ===== Common ===== */
 
+.flexItemsEvenly {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
 .invisibleText{
     color: rgba(0,0,0,0) !important;
     text-shadow: unset !important;
@@ -156,6 +162,11 @@
 .neonBackground{
     --_colorNeon: var(--colorNeon, --colorNeonWhite);
     background-color: var(--_colorNeon);
+}
+.neonBackgroundHover:hover,
+.neonBackgroundHover:focus{
+    --_colorGlow: var(--colorGlow, --colorNeonWhiteGlow);
+    background-color: var(--_colorGlow);
 }
 
 .neonBorder{
@@ -244,6 +255,15 @@
 .neonScrollBar.red{
     --colorNeon: var(--colorNeonRed);
     --colorGlow: var(--colorNeonRedGlow);
+}
+.neonText.orange,
+.neonTextGlow.orange,
+.neonBackground.orange,
+.neonBorder.orange,
+.neonBoxShadowGlow.orange,
+.neonScrollBar.orange{
+    --colorNeon: var(--colorNeonOrange);
+    --colorGlow: var(--colorNeonOrangeGlow);
 }
 .neonText.white,
 .neonTextGlow.white,

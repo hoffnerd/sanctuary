@@ -7,9 +7,9 @@ export const CenterVertically = ({ children, className="" }) => (
     </div>
 );
 
-export const Panel = ({ children, className="" }) => (
+export const Panel = ({ children, className="", innerClassName="", hasDefaultInnerClass=true }) => (
     <div className={`${gameStyles.panel} ${className} neonBorder neonBoxShadowGlow purple`}>
-        <div className={`${gameStyles.innerPanel} neonScrollBar purple`}>
+        <div className={`${hasDefaultInnerClass ? gameStyles.innerPanel : ""} ${innerClassName} neonScrollBar purple`}>
             {children}
         </div>
     </div>
