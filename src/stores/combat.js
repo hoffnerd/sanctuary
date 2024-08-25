@@ -44,8 +44,11 @@ export const defaultCombatStore = {
 /**
  * Initializes a combat scenario by combining entities with default properties, setting 
  * their HP to maximum, shuffling the turn order, and updating the combat state.
- * @param set - function that is used to update the state in the Zustand store.
- * @param entitiesToSet - `entitiesToSet` is an object containing entities that will participate in the combat.
+ * @param {function} set - function that is used to update the state in the Zustand store.
+ * @param {object} entitiesToSet - object, containing entities that will participate in the combat.
+ * @param {string} startingNarrative - string of what to display to the player in the narrative panel
+ * when combat starts. If not given, will use the default text of "The battle starts!"
+ * @returns {void}
  */
 const startCombat = (set, entitiesToSet, startingNarrative=null) => {
 
@@ -71,9 +74,9 @@ const startCombat = (set, entitiesToSet, startingNarrative=null) => {
 }
 
 /**
- * Updates the status of entities based on their health points.
- * @param entities - object of objects where which object represents an entity in combat.
- * @returns object of objects that is the new `entities` to be added to the Zustand store.
+ * Updates the status of entities based on their health points and statuses.
+ * @param {object} entities - object of objects where which object represents an entity in combat.
+ * @returns {object} object of objects that is the new `entities` to be added to the Zustand store.
  */
 const checkEntitiesStatuses = (entities) => {
 
@@ -95,7 +98,28 @@ const checkEntitiesStatuses = (entities) => {
     return newEntities;
 }
 
+
+/**
+ * Generates narrative text for different actions in a game, with an option to type out the text gradually.
+ * @param {object} actionNarrativeObj
+ * @param {boolean | false} [actionNarrativeObj.shouldTypeText] - optional boolean, default is `false`. 
+ * Determines whether the text should be displayed all at once or with a typing effect. 
+ * @param {object} actionNarrativeObj.actionTakerObj - object, the entity that is taking the action. It could be a player 
+ * character, an enemy, or any other entity in the game that is performing an action. At the very least,
+ * this object should have the following properties:
+ * @param {object} [actionNarrativeObj.targetObj] - optional object, the entity that is targeted by the action.
+ * @param {string | "skip"} [actionNarrativeObj.type] - optional string, default is "skip". Determines the type of the action being performed.
+ * @param {object} [actionNarrativeObj.actionObj] - optional object, that contains information about the action being taken. 
+ * It should have a property called `narrative` which is a function that generates the narrative text for the action.
+ * @param {number} [actionNarrativeObj.damage] - optional int, default is `0`. Represents the amount of damage caused by the action being narrated.
+ * @returns {{
+ *  render: React.JSX.Element | null
+ *  contentTextLength: number
+ * }}
+ */
 const actionNarrative = ({shouldTypeText=false, actionTakerObj, targetObj=null, type="skip", actionObj=null, damage=0}) => {
+
+    // return early with default text if either no `actionObj`was given or if the `actionObj` does not have a `narrative`
     if(!isObj(actionObj, ["narrative"])) return generateContent(true, shouldTypeText, [
         `For whatever reason, `,
         { 
@@ -104,6 +128,7 @@ const actionNarrative = ({shouldTypeText=false, actionTakerObj, targetObj=null, 
         },
         ` decided to skip their turn.`
     ]);
+
 
     let narrativeArray = [];
     switch (type) {
@@ -118,7 +143,23 @@ const actionNarrative = ({shouldTypeText=false, actionTakerObj, targetObj=null, 
 
 /**
  * Processes an attack action on entities based on the selected attack and target, applying damage accordingly.
- * @returns Object of objects that is `entities` object after applying damage to the target(s) based on the attack selected.
+ * @param {object} zustandState
+ * @param {object} zustandState.entities - object, contains information about all the entities in the
+ * game. Each entity is identified by a unique `key` and has properties such as `hp` (health points),
+ * `isFriendly` (whether it belongs to the player's team), `isDead` (whether it is dead), `isUnconscious`
+ * (whether it is unconscious) and any other entity related data.
+ * @param {Array<string>} zustandState.initiativeOrder - array of strings, where each string is an entity's key.
+ * Determines the order in which entities will take their turns in combat. The first key in the array represents the entity
+ * that is currently taking their turn, the second element represents the entity that will take its turn next, and so on.
+ * @param {string} zustandState.attackSelected - string that is the key of an attack from the `attacksLibrary`. Represents 
+ * the specific attack that the entity wants to execute.
+ * @param {object} data
+ * @param {string} data.targetEntityKey - string, represents the key of the entity that is being targeted by the attack. 
+ * This key is used to identify the specific entity within the `entities` object that will be affected by the attack.
+ * @returns {{
+ *  entities: object;
+ *  damage: number | undefined;
+ * }}
  */
 const executeAttack = ({ entities, initiativeOrder, attackSelected }, { targetEntityKey }) => {
 
@@ -126,7 +167,7 @@ const executeAttack = ({ entities, initiativeOrder, attackSelected }, { targetEn
     const entityKey = initiativeOrder[0]
 	const entityObj = entityKey ? entities[entityKey] : null;
     const attackObj = attackSelected ? attacksLibrary[attackSelected] : null;
-    if(!isObj(attackObj, [ "targets" ])) return entities;
+    if(!isObj(attackObj, [ "targets" ])) return { entities };
 
     // TODO: Calculate damage based off stats
     const damage = attackObj.damage
@@ -151,34 +192,55 @@ const executeAttack = ({ entities, initiativeOrder, attackSelected }, { targetEn
     return { entities:newEntities, damage };
 }
 
-/** 
- * Function to go to the next turn
+/**
+ * Reorders a list of entities based on initiative order, skipping over entities that are dead, unconscious, or hidden.
+ * @param {object} entities - object, contains information about all the entities in the game. Each entity is identified 
+ * by a unique `key` and has properties such as `hp` (health points),`isFriendly` (whether it belongs to the player's 
+ * team), `isDead` (whether it is dead), `isUnconscious` (whether it is unconscious) and any other entity related data.
+ * @param {Array<string>} initiativeOrder - array of strings, where each string is an entity's key. Determines the order 
+ * in which entities will take their turns in combat. The first key in the array represents the entity that is currently 
+ * taking their turn, the second element represents the entity that will take its turn next, and so on.
+ * @param {number | 0} [backgroundTurnCount] - optional int, default is `0`. Used to keep track of the turn count that 
+ * includes skips over entities that are dead, unconscious, or hidden.
+ * @param {number | 0} [depth] - optional int, default is `0`. Represents the current depth level of recursion. It is
+ * used to keep track of how many times the function has recursively called itself.
+ * @returns {{
+ *  newInitiativeOrder: Array<string>;
+ *  newBackgroundTurnCount: number;
+ * }}
+ */
+const getNextInitiativeOrder = (entities, initiativeOrder, backgroundTurnCount=0, depth=0) => {
+
+    // Error guard clauses to make sure we have the data we need
+    if(!isArray(initiativeOrder)) return { initiativeOrder, backgroundTurnCount, error:"The `initiativeOrder` is not array in `getNextInitiativeOrder`!" };
+    if(initiativeOrder.length < depth) return { initiativeOrder, backgroundTurnCount, error:"Depth limit excited in `getNextInitiativeOrder`!" };
+
+    // count up the backgroundTurnCount to keep round count in order
+    const newBackgroundTurnCount = backgroundTurnCount+1;
+
+    // Put the entity that is at the top, at the bottom
+    let newInitiativeOrder = [...initiativeOrder];
+    let removed = newInitiativeOrder.splice(0, 1);
+    newInitiativeOrder.splice(newInitiativeOrder.length, 0, removed[0]);
+
+    // Check if this entity is dead, unconscious, or hidden and if so call this function recursively.
+    const currentEntityKey = newInitiativeOrder[0];
+    const { isDead, isUnconscious, isHidden } = entities[currentEntityKey];
+    if(isDead || isUnconscious || isHidden) return getNextInitiativeOrder(entities, newInitiativeOrder, newBackgroundTurnCount, depth+1);
+
+    // We have found the `newInitiativeOrder` and `newBackgroundTurnCount` so return it
+    return { newInitiativeOrder, newBackgroundTurnCount };
+}
+
+/**
+ * Updates the zustand state based on the current turn, including handling entity actions like adding Adrenaline Points and executing attacks.
+ * @param {function} set - function that is used to update the state in the Zustand store.
+ * @param {string | null} [type] - optional string, determines the type of action being performed.
+ * @param {object | null} [neededData] - optional object, used to pass any additional data that may be required for the specific 
+ * type of action being performed. This data could include information about the target entity for an attack, for example. 
+ * @returns {void}
  */
 const setNextTurnState = (set, type=null, neededData=null) => {
-
-    /** Internal Function to find the next initiativeOrder */
-    const getNextInitiativeOrder = (entities, initiativeOrder, backgroundTurnCount=0, depth=0) => {
-
-        // Error guard clauses to make sure we have the data we need
-        if(!isArray(initiativeOrder)) return { initiativeOrder, backgroundTurnCount, error:"The `initiativeOrder` is not array in `getNextInitiativeOrder`!" };
-        if(initiativeOrder.length < depth) return { initiativeOrder, backgroundTurnCount, error:"Depth limit excited in `getNextInitiativeOrder`!" };
-
-        // count up the backgroundTurnCount to keep round count in order
-        const newBackgroundTurnCount = backgroundTurnCount+1;
-
-        // Put the entity at the top, at the bottom
-        let newInitiativeOrder = [...initiativeOrder];
-        let removed = newInitiativeOrder.splice(0, 1);
-        newInitiativeOrder.splice(newInitiativeOrder.length, 0, removed[0]);
-
-        // Check if this entity is dead, unconscious, or hidden and if so call this function recursively.
-        const currentEntityKey = newInitiativeOrder[0];
-        const { isDead, isUnconscious, isHidden } = entities[currentEntityKey];
-        if(isDead || isUnconscious || isHidden) return getNextInitiativeOrder(entities, newInitiativeOrder, newBackgroundTurnCount, depth+1);
-
-        // We have found the `newInitiativeOrder` and `newBackgroundTurnCount` so return it
-        return { newInitiativeOrder, newBackgroundTurnCount };
-    }
 
     // Go into our zustand `set` function and set the next the next turn
     set(({ entities, initiativeOrder, roundCount, turnCount, backgroundTurnCount, actionHistory, attackSelected }) => {
@@ -235,7 +297,7 @@ const setNextTurnState = (set, type=null, neededData=null) => {
             turnCount: turnCount+1,
             backgroundTurnCount: newBackgroundTurnCount,
             attackSelected: null,
-            actionHistory: newActionHistory
+            actionHistory: newActionHistory 
         }
     })
 }
@@ -258,6 +320,6 @@ export const useCombatStore = create((set) => ({
     // ===== Store Functions =====
     setEntities: (entities) => set(() => ({ entities })),
     setAttackSelected: (attackSelected) => set(() => ({ attackSelected })),
-    startCombat: (entitiesToSet) => startCombat(set, entitiesToSet),
+    startCombat: (entitiesToSet, startingNarrative) => startCombat(set, entitiesToSet, startingNarrative),
     setNextTurnState: (type, neededData) => setNextTurnState(set, type, neededData)
 }))

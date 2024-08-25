@@ -65,6 +65,19 @@ export const readPageMarkdown = async (string_) => {
     return { ...data, html: html.value.toString() }
 }
 
+/**
+ * Asynchronously reads all markdown files in a specified directory and returns them sorted by date.
+ * @param {string} [endPath] - optional string, represents the directory path where the markdown files 
+ * are located. If no `endPath` is provided, the function will default to an empty string.
+ * @returns {Promise<
+ *  Array<{
+ *      id: string;
+ *      title: string;
+ *      date: string;
+ *      html: string;
+ *  }>
+ * >}
+ */
 export const readAllMarkdownFiles = async (endPath="") => {
     const markdownFiles = await Promise.all(getMarkdownFiles(endPath).map((id) => readMarkdownFileById(endPath, id)));
     return markdownFiles.sort((file1, file2) => (file1.date > file2.date ? -1 : 1));

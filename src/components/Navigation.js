@@ -47,7 +47,7 @@ const components = [
 //______________________________________________________________________________________
 // ===== Component =====
 
-export default function NavigationUser() {
+export default function Navigation() {
 
     //______________________________________________________________________________________
     // ===== State from Auth =====
