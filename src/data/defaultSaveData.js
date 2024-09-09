@@ -1,13 +1,19 @@
+import { defaultAbilities } from "./game/crew";
 
 
 export const defaultSaveData = {    
-    abilities:{},
+
+    crew: {
+        player: {
+            key: "player",
+            abilities: { ...defaultAbilities },
+            proficiencies: [],
+        },
+    }, 
+
+    party: [ "player" ],
 
     inventory: [],
 
     narrative: [],
-
-    crew: {}, 
-
-    party: [ "player" ]
 }

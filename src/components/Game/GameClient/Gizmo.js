@@ -62,11 +62,11 @@ export default function Gizmo({ saveFile }){
             Log Calculated Abilities
         </Button>
         <br/>
-        <Button variant="link" onClick={()=>saveGame({ additionalSaveData: { crew:{ bartonSimon:5 }, party: [ "player", "bartonSimon" ] }})}>
+        <Button variant="link" onClick={()=>saveGame({ overrideSaveData: { crew:{ bartonSimon:5 }, party: [ "player", "bartonSimon" ] }})}>
             Add Simon with 5 points
         </Button>
         <br/>
-        <Button variant="link" onClick={()=>saveGame({ additionalSaveData: {...defaultSaveData}})}>
+        <Button variant="link" onClick={()=>saveGame({ overrideSaveData: {...defaultSaveData}})}>
             Restart
         </Button>
         <p>id: {saveFileId}</p>

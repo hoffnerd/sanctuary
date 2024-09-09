@@ -165,10 +165,10 @@ const checkAllowedToAddNarrative = (narrative, narrativeToAdd) => {
  * Updates the in-game time and the save date of a save file in a database.
  * @param id - string, unique identifier of the save file that you want to update.
  * @param inGameTime - int, represents the in-game time that needs to be saved in the database.
- * @param additionalSaveData - obj, represents the save data to be saved in the database.
+ * @param overrideSaveData - obj, represents the save data to be saved in the database.
  * @returns obj, the full saveFile from the database or an object with an error bool and error message
  */
-export const updateSaveFile = async ({id, inGameTime, additionalSaveData, narrativeToAdd}) => {
+export const updateSaveFile = async ({id, inGameTime, overrideSaveData, additionalSaveData, narrativeToAdd}) => {
     
     const session = await readServerSession({ trace:"updateSaveFile", requiredRole });
     if(isObj(session, ["error"])) return session;
@@ -180,9 +180,14 @@ export const updateSaveFile = async ({id, inGameTime, additionalSaveData, narrat
         });
 
         let saveData = { ...defaultSaveData };
-        if(isObj(saveFile.saveData) && isObj(additionalSaveData)) saveData = { ...defaultSaveData, ...saveFile.saveData, ...additionalSaveData };
+        if(isObj(saveFile.saveData) && isObj(overrideSaveData)) saveData = { ...defaultSaveData, ...saveFile.saveData, ...overrideSaveData };
         else if(isObj(saveFile.saveData)) saveData = { ...defaultSaveData, ...saveFile.saveData };
 
+        isObj(additionalSaveData) && Object.keys(additionalSaveData).forEach(saveDataKey => {
+            saveData[saveDataKey] = saveData[saveDataKey] 
+                ? { ...saveData[saveDataKey], ...additionalSaveData[saveDataKey] } 
+                : { ...additionalSaveData[saveDataKey] }
+        });
 
         if(narrativeToAdd && checkAllowedToAddNarrative(saveData.narrative, narrativeToAdd)){
             saveData.narrative.push(narrativeToAdd);

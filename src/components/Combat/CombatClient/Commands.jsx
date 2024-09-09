@@ -2,19 +2,17 @@
 
 // Packages -------------------------------------------------------------------------
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useParams } from 'next/navigation';
 import { ChevronsUpDown } from "lucide-react"
-// Hooks-----------------------------------------------------------------------------
-import useSaveGame from '@/hooks/useSaveGame';
+// Stores----------------------------------------------------------------------------
+import { useCombatStore } from '@/stores/combat';
 // Components -----------------------------------------------------------------------
 import { Button } from '@/components/shadcn/ui/button';
 import { Command, CommandEmpty, CommandInput, CommandItem, CommandList, } from '@/components/shadcn/ui/command';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/shadcn/ui/popover';
 // Data------------------------------------------------------------------------------
-import { defaultSaveData } from '@/data/defaultSaveData';
-import { crewData } from '@/data/game/crew';
 // Other ----------------------------------------------------------------------------
-import { isArray, isObj } from '@/util';
+import { assistStartCombat } from '@/util/combat';
 
 
 
@@ -23,20 +21,31 @@ import { isArray, isObj } from '@/util';
 export default function Commands({ saveFile }){
 
     //______________________________________________________________________________________
-    // ===== Constants =====
-    const { saveData } = saveFile;
+    // ===== Hooks =====
+    const router = useRouter()
+    const params = useParams();
+
+
+
+    //______________________________________________________________________________________
+    // ===== Stores =====
+    const combatStore = useCombatStore((state) => state);
+    const {
+        entities,
+        initiativeOrder,
+        startingEntityKey,
+        roundCount,
+        turnCount,
+        backgroundTurnCount,
+        startCombat,
+        setNextTurnState,
+    } = combatStore;
+    
 
 
     //______________________________________________________________________________________
     // ===== State =====
     const [open, setOpen] = useState(false)
-
-
-
-    //______________________________________________________________________________________
-    // ===== Hooks =====
-    const router = useRouter()
-    const { saveGame } = useSaveGame();
     
 
 
@@ -44,36 +53,29 @@ export default function Commands({ saveFile }){
     // ===== Commands =====
     const commands = [
         {
+            key: "logCombatData",
+            display: "Log Combat Data",
+            action: () => console.log(combatStore)
+        },
+        {
             key: "logSaveFile",
             display: "Log SaveFile",
             action: () => console.log(saveFile)
         },
         {
+            key: "playPage",
+            display: "Go Back To Play Page",
+            action: () => router.push(`/play/${saveFile.id}`)
+        },
+        {
             key: "restart",
-            display: "Restart Game",
-            action: () => saveGame({ overrideSaveData: {...defaultSaveData}})
+            display: "Restart Combat",
+            action: () => assistStartCombat(startCombat, params?.combatId, saveFile)
         },
         {
-            key: "back",
-            display: "Go back a Narrative",
-            action: () => {
-                let newNarrative = [ ...saveData.narrative ];
-                newNarrative.pop();
-                saveGame({ overrideSaveData: { narrative:newNarrative }})
-            }
-        },
-        {
-            key: "testCombat",
-            display: "Start Test Combat",
-            action: () => router.push(`/play/${saveFile.id}/combat/test`)
-        },
-        {
-            key: "addSimon",
-            display: "Add Simon to Crew and Party",
-            action: () => saveGame({ 
-                overrideSaveData: { party: [ "player", "bartonSimon" ] },
-                additionalSaveData: { crew: { bartonSimon: crewData.bartonSimon } } 
-            })
+            key: "skipTurn",
+            display: "Skip Turn",
+            action: () => setNextTurnState()
         },
     ]
 

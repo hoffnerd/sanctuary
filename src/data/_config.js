@@ -4,17 +4,94 @@
     or just easier to have here so I don't have to search multiple files to turn off random features.
 */
 
-/** @constant {Boolean}, this is just an example */
+/** @constant {boolean} - this is just an example */
 export const example = true;
 
-/** @constant {Number}, the amount of time to type each character in microseconds */
+/** @constant {number} - the amount of time to type each character in microseconds */
 export const typingCharacterInterval = 25; 
 
-/** @constant {Number}, the amount of time before we do an auto save in seconds */ 
+/** @constant {number} - the amount of time before we do an auto save in seconds */ 
 export const saveInterval = 300; 
 
-/** @constant {Number}, the amount of time before we auto run the the next narrative, if there are no choices in microseconds */
+/** @constant {number} - the amount of time before we auto run the the next narrative, if there are no choices in microseconds */
 export const nextNarrativeInterval = 2500; 
 
-/** @constant {Number}, the maximum amount of adrenaline points an entity may have in combat */
+/** @constant {number} - the maximum amount of adrenaline points an entity may have in combat */
 export const maxAdrenalinePoints = 5; 
+
+
+
+//______________________________________________________________________________________
+// ===== Character Configuration =====
+
+/** @constant {number} - the base hp a character has. */
+export const ABILITY_POINTS_AT_LEVEL_0 = 5;
+
+/** @constant {number} - the base hp a character has. */
+export const HP_BASE = 10;
+
+/** @constant {number} - the hp a character gains per total level. */
+export const HP_PER_LEVEL = 5;
+
+/** @constant {number} - the multiplier to use when calculating the bonus health one gets from their survival ability level. */
+export const HP_SURVIVAL_MULTIPLIER = 0.2; 
+
+/** @constant {number} - the base hp regenerated at the end of a characters turn. */
+export const HP_REGEN_BASE = 0;
+
+/** @constant {number} - the hp regenerated per total level at the end of a characters turn. */
+export const HP_REGEN_PER_LEVEL = 1;
+
+/** @constant {number} - the multiplier to use when calculating the bonus health regenerated one gets from their survival ability level. */
+export const HP_REGEN_SURVIVAL_MULTIPLIER = 0.1; 
+
+/** @constant {number} - the base adrenaline regenerated at the end of a characters turn. */
+export const ADRENALINE_REGEN_BASE = 1;
+
+/** @constant {number} - the multiplier to use when calculating the bonus adrenaline regenerated one gets from their survival ability level. */
+export const ADRENALINE_REGEN_SURVIVAL_MULTIPLIER = 0.1; 
+
+/** @constant {number} - the base damage an unarmed strike does. */
+export const UNARMED_DAMAGE_BASE = 1;
+
+/** @constant {number} - the damage that scales with a characters total level. */
+export const UNARMED_DAMAGE_PER_LEVEL = 0.5;
+
+/** @constant {number} - the multiplier to use when calculating the damage one gets from their strength ability level. */
+export const DAMAGE_STRENGTH_MULTIPLIER = 0.1;
+
+/** @constant {number} - the multiplier to use when calculating the damage one gets from their melee attack proficiency ability level. */
+export const MELEE_ATTACK_PROFICIENCY_MULTIPLIER = 0.1;
+
+/** @constant {number} - the base defense a character has. */
+export const DEFENSE_BASE = 0;
+
+/** @constant {number} - the defense per total level a character has. */
+export const DEFENSE_PER_LEVEL = 0.25;
+
+/** @constant {number} - the multiplier to use when calculating the bonus defense one gets from their strength ability level. */
+export const DEFENSE_STRENGTH_MULTIPLIER = 0.1; 
+
+/** @constant {number} - the multiplier to use when calculating the defense one gets from their defense proficiency ability level. */
+export const DEFENSE_PROFICIENCY_MULTIPLIER = 0.1;
+
+/** @constant {number} - the maximum defense a character has based off their stats. */
+export const DEFENSE_STAT_BASED_MAX = 25;
+
+/** @constant {number} - the maximum defense a character has based off their equipment. */
+export const DEFENSE_EQUIPMENT_BASED_MAX = 25;
+
+/** @constant {number} - the base critical damage percent a character has. */
+export const CRITICAL_DAMAGE_BASE = 5;
+
+/** @constant {number} - the critical damage percent per total level a character has. */
+export const CRITICAL_DAMAGE_PER_LEVEL = 0.25;
+
+/** @constant {number} - the multiplier to use when calculating the bonus critical damage percent one gets from their strength ability level. */
+export const CRITICAL_DAMAGE_STRENGTH_MULTIPLIER = 0.45; 
+
+/** @constant {number} - the multiplier to use when calculating the critical damage percent one gets from their critical damage proficiency ability level. */
+export const CRITICAL_DAMAGE_PROFICIENCY_MULTIPLIER = 0.45;
+
+/** @constant {number} - the maximum critical damage percent a character can have. */
+export const CRITICAL_DAMAGE_MAX = 100;

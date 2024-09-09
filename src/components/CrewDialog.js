@@ -61,7 +61,7 @@ export default function CrewDialog({ initialActiveKey=null }){
             crewId !== activeKey && newParty.push(crewId);
         });
         if(!toRemove) newParty = [ ...party, activeKey ];
-        saveGame({ additionalSaveData: { party:newParty } });
+        saveGame({ overrideSaveData: { party:newParty } });
     }
 
 

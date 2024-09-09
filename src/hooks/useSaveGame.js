@@ -47,20 +47,17 @@ export default function useSaveGame(){
     //______________________________________________________________________________________
     // ===== Functions =====
 
-    const saveGame = ({ additionalSaveData=null, narrativeToAdd=null }) => {
+    const saveGame = ({ overrideSaveData=null, additionalSaveData=null, narrativeToAdd=null }) => {
         if((!saveFileId) && gameSaving) return;
 
         setGameSaving(true);
 
-        let newSaveFile = {
+        const newSaveFile = {
             id:saveFileId, 
             inGameTime, 
-            additionalSaveData:{},
+            overrideSaveData: isObj(overrideSaveData) ? { ...overrideSaveData } : {},
+            additionalSaveData: isObj(additionalSaveData) ? { ...additionalSaveData } : {},
             narrativeToAdd
-        }
-
-        if(isObj(additionalSaveData)){
-            newSaveFile.additionalSaveData = { ...newSaveFile.additionalSaveData, ...additionalSaveData }
         }
 
         mutate({
