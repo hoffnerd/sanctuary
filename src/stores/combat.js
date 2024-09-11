@@ -9,6 +9,7 @@ import { attacksLibrary } from '@/data/game/attacks';
 // Other---------------------------------------------------------------------------
 import { convertObjToArray, isArray, isObj } from '@/util';
 import { shuffleArray } from '@/util/shuffleArray';
+import { calculateCharacterBuild } from '@/util/character';
 
 
 
@@ -55,7 +56,7 @@ const startCombat = (set, entitiesToSet, startingNarrative=null) => {
     // Combine each entity within `entitiesToSet` with the `defaultEntityObj`
     let entities = structuredClone({ ...entitiesToSet });
     Object.keys(entities).forEach((key, index) => {
-        entities[key] = { ...defaultEntityObj, ...entities[key] };
+        entities[key] = calculateCharacterBuild({ ...defaultEntityObj, ...entities[key] });
         entities[key].hp = entities[key].hpMax;
     });
 

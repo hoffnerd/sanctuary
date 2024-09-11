@@ -1,12 +1,19 @@
 
+
 /**
  * Checks if a given value is an array and has a length greater than a specified value.
  * @param array - The `array` parameter is the variable that you want to check if it is an array.
  * @param [lengthToCheckFor=0] - int, optional parameter that specifies the minimum length that the array should have in order for the function to return `true`.
  * If this parameter is not provided, it defaults to 0, meaning that the function will return `true` if the array is not empty.
+ * @param [exactLength=false] - optional boolean, default is false. Determines whether the length of the 
+ * array should be exactly equal to the specified `lengthToCheckFor` value. 
  * @returns bool, returns true if the input is an array and its length is greater than the specified lengthToCheckFor (or 0 if not specified), and false otherwise.
  */
-export const isArray = (array, lengthToCheckFor = 0) =>  array && Array.isArray(array) && array.length > lengthToCheckFor;
+export const isArray = (array, lengthToCheckFor=0, exactLength=false) => {
+    if(!(array && Array.isArray(array))) return false;
+    if (exactLength) return array.length === lengthToCheckFor;
+    return array.length > lengthToCheckFor;
+}   
 
 /**
  * Checks if a given object is a valid object and optionally checks if it has specific keys.

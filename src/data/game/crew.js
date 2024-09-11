@@ -1,14 +1,11 @@
+import { DEFAULT_ABILITY_LEVELS } from "../_config"
 
 
 export const partyLimitMax = 4
 
-export const defaultAbilities = {
-    survival: 0,
-    strength: 0,
-    charisma: 0,
-    dexterity: 0,
-    intelligence: 0,
-}
+
+/** @deprecated - use DEFAULT_ABILITY_LEVELS */
+export const defaultAbilities = DEFAULT_ABILITY_LEVELS
 
 
 export const crewData = {
@@ -18,7 +15,7 @@ export const crewData = {
         fullName: "Simon Barton",
         unspentLevels: 0,
         abilities: {
-            ...defaultAbilities,
+            ...DEFAULT_ABILITY_LEVELS,
             survival: 2,
             strength: 3,
         },

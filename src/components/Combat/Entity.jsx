@@ -16,7 +16,6 @@ import { maxAdrenalinePoints } from "@/data/_config";
 // ===== Constants =====
 
 const apClass = "neonBackground neonBoxShadowGlow yellow";
-const buttonClass = "hover:bg-accent hover:text-accent-foreground"
 
 
 
@@ -50,7 +49,10 @@ const EntityContent = ({ entityObj }) => {
                 <p>AP:</p>
                 {renderAdrenalinePoints()}
             </div>
-            <p className="text-left">HP: {entityObj.hp}/{entityObj.hpMax}</p>
+            <div className="flex items-center justify-between pb-1">
+                <p>HP: {entityObj.hp}/{entityObj.hpMax}</p>
+                <p>Lvl: {entityObj.level || entityObj.level === 0 ? entityObj.level : "?"}</p>
+            </div>
             <Progress 
                 indicatorClassName="neonBackground neonBoxShadowGlow green" 
                 value={(entityObj.hp/entityObj.hpMax)*100} 
@@ -88,10 +90,10 @@ export default function Entity({ className, entityKey }){
 
     //______________________________________________________________________________________
     // ===== Component Return =====
-
+ 
 	if(attackSelected && isOpposingForce) return (
 		<button 
-            className={`${classes} ${buttonClass}`}
+            className={`${classes} hover:bg-accent hover:text-accent-foreground`}
             onClick={() => setNextTurnState("attack", { targetEntityKey:entityKey })}
         >
             <EntityContent entityObj={entityObj} />

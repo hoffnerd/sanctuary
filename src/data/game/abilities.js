@@ -82,6 +82,7 @@ export const stats = {
     accuracy: {
         key: "accuracy",
         display: "Accuracy",
+        otherDisplay: "Accuracy Bonus",
         shortDescription: "",
         description: "",
         techDescription: "",

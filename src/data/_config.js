@@ -24,7 +24,19 @@ export const maxAdrenalinePoints = 5;
 //______________________________________________________________________________________
 // ===== Character Configuration =====
 
-/** @constant {number} - the base hp a character has. */
+/** @constant {object} - the default ability levels a character has */
+export const DEFAULT_ABILITY_LEVELS = {
+    survival: 0,
+    strength: 0,
+    charisma: 0,
+    dexterity: 0,
+    intelligence: 0,
+}
+
+/** @constant {number} - the level to use in some calculations if a character is at level 0 */
+export const TECHNICAL_LEVEL_0 = 0.5;
+
+/** @constant {number} - how many ability points a character has at level 0. */
 export const ABILITY_POINTS_AT_LEVEL_0 = 5;
 
 /** @constant {number} - the base hp a character has. */
@@ -95,3 +107,33 @@ export const CRITICAL_DAMAGE_PROFICIENCY_MULTIPLIER = 0.45;
 
 /** @constant {number} - the maximum critical damage percent a character can have. */
 export const CRITICAL_DAMAGE_MAX = 100;
+
+/** @constant {number} - the base accuracy percent bonus a character has. */
+export const ACCURACY_BASE = 0;
+
+/** @constant {number} - the accuracy percent bonus per total level a character has. */
+export const ACCURACY_PER_LEVEL = 0.25;
+
+/** @constant {number} - the multiplier to use when calculating the accuracy percent bonus one gets from their dexterity ability level. */
+export const ACCURACY_DEXTERITY_MULTIPLIER = 0.1; 
+
+/** @constant {number} - the multiplier to use when calculating the accuracy percent bonus one gets from their accuracy proficiency ability level. */
+export const ACCURACY_PROFICIENCY_MULTIPLIER = 0.1;
+
+/** @constant {number} - the maximum accuracy percent bonus a character can have. */
+export const ACCURACY_MAX = 25;
+
+/** @constant {number} - the base evasion a character has. */
+export const EVASION_BASE = 15;
+
+/** @constant {number} - the evasion per total level a character has. */
+export const EVASION_PER_LEVEL = 0.25;
+
+/** @constant {number} - the multiplier to use when calculating the bonus evasion one gets from their dexterity ability level. */
+export const EVASION_DEXTERITY_MULTIPLIER = 0.5; 
+
+/** @constant {number} - the multiplier to use when calculating the bonus evasion one gets from their evasion proficiency ability level. */
+export const EVASION_PROFICIENCY_MULTIPLIER = 0.25;
+
+/** @constant {number} - the maximum evasion a character can have. */
+export const EVASION_MAX = 90;
