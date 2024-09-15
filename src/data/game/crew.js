@@ -29,7 +29,7 @@ export const crewData = {
         fullName: "Copy",
         unspentLevels: 0,
         abilities: {
-            ...defaultAbilities,
+            ...DEFAULT_ABILITY_LEVELS,
         },
         proficiencies: [ "", "" ],
         equipment: {},

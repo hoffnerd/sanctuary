@@ -56,11 +56,11 @@ const configurePartyEntities = (playerName, crew, party) => {
 
 /**
  * Assists in starting a combat scenario by preparing party entities based on save data and a specified combat ID.
- * @param {Function} startCombat - function, used to initiate a combat sequence in a game 
- * or application. Intended to be the `startCombat` function from the combat zustand store.
- * @param {String} combatId - string, used to identify which combat scenario from the `library` should be 
+ * @param {Function} startCombat - function, used to initiate a combat sequence in the game 
+ * Intended to be the `startCombat` function from the zustand combat store.
+ * @param {string} combatId - string, used to identify which combat scenario from the `library` should be 
  * started. Essential for determining the specific set of enemies and other details for the combat encounter.
- * @param {{ name:String, saveData:Object }} saveFile - object, contains the saved data for the game.
+ * @param {{ name:string, saveData:object }} saveFile - object, contains the saved data for the game.
  * @returns {void}
  */
 export const assistStartCombat = (startCombat, combatId, saveFile) => {
