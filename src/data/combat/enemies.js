@@ -6,6 +6,9 @@ const SHARED_DEFAULTS = {
     abilities: { ...DEFAULT_ABILITY_LEVELS },
     proficiencies: [],
     equipment: {},
+    isFriendly: false,
+    isDead: false,
+    isUnconscious: false,
     isHidden: true,
 }
 

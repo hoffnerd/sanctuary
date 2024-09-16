@@ -1,46 +1,112 @@
 "use client"
 
-// Packages -------------------------------------------------------------------------
+// Packages -----------------------------------------------------------------------
+import { useParams } from "next/navigation";
+// rQuery -------------------------------------------------------------------------
+import { useReadSaveFile } from "@/rQuery/hooks/saveFile";
 // Stores--------------------------------------------------------------------------
+import { DEFAULT_COMBAT_STORE, useCombatStore } from "@/stores/combat";
 // Data ---------------------------------------------------------------------------
+import { combatEncounterLibrary } from "@/data/combat/library";
+import { COMBAT_DEFAULT_FRIENDLY, DEFAULT_SAVE_DATA, DEFAULT_SAVE_FILE, MAX_ADRENALINE_POINTS } from "@/data/_config";
 // Other --------------------------------------------------------------------------
+import { isArray, isObj } from "@/util";
+import { randomizeEntities } from "@/util/combat"
+import { shuffleArray } from "@/util/shuffleArray";
+import { calculateCharacterBuild } from "@/util/character";
+
 
 
 
 //______________________________________________________________________________________
 // ===== Hook =====
 
+/**
+ * 
+ * @returns {{
+ *  initializeCombat: () => void
+ * }}
+ */
 export default function useCombat(){
 
     //______________________________________________________________________________________
-    // ===== Store =====
+    // ===== Store Functions =====
+	const set = useCombatStore((state) => state.set);
+	const setError = useCombatStore((state) => state.setError);
+	const resetError = useCombatStore((state) => state.resetError);
 
+
+
+    //______________________________________________________________________________________
+    // ===== Hooks =====
+    const { id:saveFileId, combatId } = useParams()
+    const { data:saveFileQueried } = useReadSaveFile(saveFileId);
+
+
+
+    //______________________________________________________________________________________
+    // ===== Constants =====
+
+    const saveFile = isObj(saveFileQueried) ? { ...DEFAULT_SAVE_FILE, ...saveFileQueried } : { ...DEFAULT_SAVE_FILE };
+    const { name:playerName, saveData:saveFileSaveData } = saveFile;
+    const saveData = isObj(saveFileSaveData) ? { ...DEFAULT_SAVE_DATA, ...saveFileSaveData } : { ...DEFAULT_SAVE_DATA };
+    const { crew, party } = saveData;
+
+    const encounterData = combatId && combatEncounterLibrary?.[combatId]
 
 
 
     //______________________________________________________________________________________
     // ===== Initialize Combat =====
 
-    const initializeCombat = () => {
+    const configureEnemyEntities = () => {
+        if(isObj(encounterData?.settings?.randomize)) return randomizeEntities(encounterData.enemies, encounterData.settings.randomize);
+        return isObj(enemies) ? { ...enemies } : {};
+    }
 
-        // Combine each entity within `entitiesToSet` with the `defaultEntityObj`
-        let entities = structuredClone({ ...entitiesToSet });
-        Object.keys(entities).forEach((key, index) => {
-            entities[key] = calculateCharacterBuild({ ...defaultEntityObj, ...entities[key] });
-            entities[key].hp = entities[key].hpMax;
+    const configurePartyEntities = () => {
+        let partyEntities = {}
+        party.forEach(id => {
+            if(!isObj(crew, [ id ])) return;
+    
+            partyEntities[id] = { 
+                ...crew[id], 
+                ...COMBAT_DEFAULT_FRIENDLY, 
+                display: (crew[id].display) || (id === "player" && playerName),
+                isHidden:false 
+            }
+        });
+        return partyEntities;
+    }
+
+    /**
+     * Sets up a combat encounter by combining party and enemy entities, calculating their stats, 
+     * determining initiative order, and initializing combat state.
+     * @returns {void}
+     */
+    const initializeCombat = () => {
+        if(!encounterData?.enemies) return setError("Missing encounter data in the `initializeCombat` function!");
+        if(!isArray(party)) return setError("Missing party in the `initializeCombat` function!");
+
+        if(false) return; // TODO: Replace with check to see if player should be able to play this encounter yet
+
+        // combine party and enemy entities then calculate all their stats
+        let entities = structuredClone({ ...configurePartyEntities(), ...configureEnemyEntities() });
+        Object.keys(entities).forEach((key) => {
+            entities[key] = calculateCharacterBuild({ ...entities[key] });
         });
     
         // Get all the keys within the `entities` object then shuffle that array
-        const entityKeys = Object.keys(entities);
-        const initiativeOrder = shuffleArray([ ...entityKeys ])
+        // TODO: figure out how I want to handle initiative
+        const initiativeOrder = shuffleArray([ ...Object.keys(entities) ])
         
         // Go into our zustand `set` function and set up the start of combat
         set(() => ({ 
-            ...defaultCombatStore, 
+            ...DEFAULT_COMBAT_STORE, 
             entities, 
             initiativeOrder, 
             startingEntityKey: initiativeOrder[0],
-            actionHistory: [{ id: 0, content: <div>{startingNarrative ? startingNarrative : "The battle starts!"}</div> }]
+            actionHistory: [{ id: 0, content: <div>{encounterData?.startingNarrative || "The battle starts!"}</div> }]
         }))
     }
 
@@ -49,7 +115,40 @@ export default function useCombat(){
     //______________________________________________________________________________________
     // ===== Combat Phase: Action Select =====
 
+    const startTurnBuffs = (initiativeOrder, entities) => {
+        const turnTakerEntityId = initiativeOrder[0]
+        const turnTakerEntity = entities[turnTakerEntityId]
 
+        // Natural Health
+        const hpRegen = turnTakerEntity.hpRegen;
+        const newHp = turnTakerEntity.hp + hpRegen;
+
+        // Natural Adrenaline
+        const adrenalineRegen = turnTakerEntity.adrenalineRegen;
+        const newAp = turnTakerEntity.ap + adrenalineRegen;
+        
+        return {
+            entities: { 
+                ...entities,
+                [turnTakerEntityId]: {
+                    ...turnTakerEntity,
+                    hp: newHp > turnTakerEntity.hpMax ? turnTakerEntity.hpMax : newHp,
+                    ap: newAp > MAX_ADRENALINE_POINTS ? MAX_ADRENALINE_POINTS : newAp,
+                }
+            },
+        }
+    }
+
+    /**
+     * Starts the turn of the entity at the 0 index of `initiativeOrder`
+     * @returns {void}
+     */
+    const startTurn = () => set(({ entities, initiativeOrder }) => {
+        const stateAfterBuffs = startTurnBuffs(initiativeOrder, entities);
+        return {
+            ...stateAfterBuffs
+        }
+    })
 
 
     //______________________________________________________________________________________
@@ -73,7 +172,7 @@ export default function useCombat(){
     //______________________________________________________________________________________
     // ===== Hook Return =====
     return {
-
+        initializeCombat,
     }
 }
 
@@ -88,43 +187,42 @@ export default function useCombat(){
 
 ## Initialize Combat
 
-- Gather save file data
-- Gather encounter data
-- Check if player should be able to play this encounter yet
-- configurePartyEntities
-- configureEnemyEntities
-- render
+- [x] Gather save file data
+- [x] Gather encounter data
+- [] Check if player should be able to play this encounter yet
+- [x] configurePartyEntities
+- [x] configureEnemyEntities
+- [x] actually Initialize Combat
+- [x] render 
 
 
 
 ## Combat Loop Phases
 
-1. Action Select - Select what this entity is going to do this turn.
-    - Read entity's healing side effects or conditions
-    - Execute the healing code of those side effect(s) or condition(s), like hp regen.
-        - Add the text to the narrative panel. For example: "Simon healed 4 health points!"
-    - Read entity's primary, secondary, and other special attacks
-    - Read entity's inventory for any items to that can be used in combat
-    - Read entity's Adrenaline Rush options
-    - Is entity controlled or AI
-        - Controlled: Make those all those options available in their respective action panel then wait for player input
-        - AI: calculate best move (*)
-2. Entity Select - Select which entity(s) for this action to target.
-    - Read the selected action's data
-    - If entity is controlled, render the action's data and cancel button in the action panel
-    - Render the buttons based on who can be targeted by the action
-    - Is entity controlled or AI
-        - Controlled: wait for player input
-        - AI: based on calculated best move, select target
-3. Execute Action
-    - Execute the code that makes the action actually do something.
-    - Add the text to the narrative panel
-    - Add any side effects or conditions to the entity(s)
-        - Add the text to the narrative panel. For example: "Simon is burning!"
-4. End Turn - Execute code that needs to run at the end of turns
-    - Read entity's damaging side effects or conditions
-    - Execute the damaging code of the side effect(s) or condition(s), like burning damage.
-        - Add the text to the narrative panel. For example: "Simon took 4 burning damage!"
+1. [] Action Select - Select what this entity is going to do this turn.
+    - [x] Read entity's healing side effects or conditions
+    - [x] Execute the healing code of those side effect(s) or condition(s), like hp regen.
+        - [] Add the text to the narrative panel. For example: "Simon healed 4 health points!"
+    - [] Is entity controlled or AI
+        - [x] Controlled: Handled by the `Actions` panel, because this hook is only considered with what has happened, not possibilities.
+        - [] AI: calculate best move (*)
+2. [] Entity Select - Select which entity(s) for this action to target.
+    - [] Should be handled by the `Actions` and `Battlefield` panels, because this hook is only considered with what has happened, not possibilities.
+        - [] Read the selected action's data
+        - [] If entity is controlled, render the action's data and cancel button in the action panel
+        - [] Render the buttons based on who can be targeted by the action
+        - [] Is entity controlled or AI
+            - [] Controlled: wait for player input
+            - [] AI: based on calculated best move, select target
+3. [] Execute Action
+    - [] Execute the code that makes the action actually do something.
+    - [] Add the text to the narrative panel
+    - [] Add any side effects or conditions to the entity(s)
+        - [] Add the text to the narrative panel. For example: "Simon is burning!"
+4. [] End Turn - Execute code that needs to run at the end of turns
+    - [] Read entity's damaging side effects or conditions
+    - [] Execute the damaging code of the side effect(s) or condition(s), like burning damage.
+        - [] Add the text to the narrative panel. For example: "Simon took 4 burning damage!"
 -
 
 

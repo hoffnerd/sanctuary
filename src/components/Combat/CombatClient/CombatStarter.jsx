@@ -6,10 +6,10 @@ import { useEffect } from "react";
 import { useParams } from "next/navigation";
 // Stores----------------------------------------------------------------------------
 import { useCombatStore } from "@/stores/combat";
-// Context---------------------------------------------------------------------------
+// Hooks-----------------------------------------------------------------------------
+import useCombat from "@/hooks/useCombat";
 // Data------------------------------------------------------------------------------
 // Other-----------------------------------------------------------------------------
-import { assistStartCombat } from "@/util/combat";
 
 
 
@@ -26,7 +26,13 @@ export default function CombatStarter({ saveFile }){
     //______________________________________________________________________________________
     // ===== Stores =====
     const startingEntityKey = useCombatStore((state) => state.startingEntityKey);
-    const startCombat = useCombatStore((state) => state.startCombat);
+
+    
+
+    //______________________________________________________________________________________
+    // ===== Hooks =====
+    const { initializeCombat } = useCombat();
+
     
 
 
@@ -34,7 +40,7 @@ export default function CombatStarter({ saveFile }){
     // ===== Use Effects =====
     useEffect(() => {
         if(startingEntityKey) return;
-        assistStartCombat(startCombat, params?.combatId, saveFile)
+        initializeCombat()
     }, [params, startingEntityKey, saveFile])
     
 

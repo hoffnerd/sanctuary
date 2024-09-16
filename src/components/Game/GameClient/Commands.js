@@ -15,6 +15,7 @@ import { defaultSaveData } from '@/data/defaultSaveData';
 import { crewData } from '@/data/game/crew';
 // Other ----------------------------------------------------------------------------
 import { isArray, isObj } from '@/util';
+import { DEFAULT_SAVE_DATA } from '@/data/_config';
 
 
 
@@ -51,11 +52,11 @@ export default function Commands({ saveFile }){
         {
             key: "restart",
             display: "Restart Game",
-            action: () => saveGame({ overrideSaveData: {...defaultSaveData}})
+            action: () => saveGame({ overrideSaveData: {...DEFAULT_SAVE_DATA}})
         },
         {
             key: "back",
-            display: "Go back a Narrative",
+            display: <div>"Go back a Narrative"</div>,
             action: () => {
                 let newNarrative = [ ...saveData.narrative ];
                 newNarrative.pop();

@@ -1,5 +1,5 @@
 
-
+/** @deprecated - I don't think this strat is useful anymore */
 export const friendlies = {
     player: {
         id: "player",

@@ -16,13 +16,13 @@ export const saveInterval = 300;
 /** @constant {number} - the amount of time before we auto run the the next narrative, if there are no choices in microseconds */
 export const nextNarrativeInterval = 2500; 
 
-/** @constant {number} - the maximum amount of adrenaline points an entity may have in combat */
-export const maxAdrenalinePoints = 5; 
+/** @deprecated - use `MAX_ADRENALINE_POINTS` instead */
+export const maxAdrenalinePoints = MAX_ADRENALINE_POINTS; 
 
 
 
 //______________________________________________________________________________________
-// ===== Character Configuration =====
+// ===== Save File Configuration =====
 
 /** @constant {object} - the default ability levels a character has */
 export const DEFAULT_ABILITY_LEVELS = {
@@ -32,6 +32,47 @@ export const DEFAULT_ABILITY_LEVELS = {
     dexterity: 0,
     intelligence: 0,
 }
+
+/** @constant {object} - the default saveData each safe file should have. */
+export const DEFAULT_SAVE_DATA = {    
+
+    crew: {
+        player: {
+            id: "player",
+            abilities: { ...DEFAULT_ABILITY_LEVELS },
+            proficiencies: [],
+        },
+    }, 
+
+    party: [ "player" ],
+
+    inventory: [],
+
+    narrative: [],
+}
+
+/** @constant {object} - the default saveFile, AKA the DB entry (row). */
+export const DEFAULT_SAVE_FILE = { name: "Player", saveData: DEFAULT_SAVE_DATA }
+
+
+
+//______________________________________________________________________________________
+// ===== Combat Configuration =====
+
+export const COMBAT_DEFAULT_FRIENDLY = {
+    isFriendly: true,
+    isDead: false,
+    isUnconscious: false,
+    isHidden: true,
+}
+
+
+export const MAX_ADRENALINE_POINTS = 5
+
+
+
+//______________________________________________________________________________________
+// ===== Character Configuration =====
 
 /** @constant {number} - the level to use in some calculations if a character is at level 0 */
 export const TECHNICAL_LEVEL_0 = 0.5;

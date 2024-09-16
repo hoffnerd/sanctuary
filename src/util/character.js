@@ -697,11 +697,15 @@ export const calculateCharacterBuild = (character) => {
     // Get the total level of this character
     const totalLevel = getTotalLevel(character);
 
+    const hpMax = calculateHpMax({ character, totalLevel, abilityLevel:survival })
+
     return {
         ...character,
         level: totalLevel,
-        hpMax: calculateHpMax({ character, totalLevel, abilityLevel:survival }),
-        hpRegen: calculateHpRegen({ character, totalLevel, abilityLevel:survival }),
+        hpMax,
+        hp: hpMax,
+        // hpRegen: calculateHpRegen({ character, totalLevel, abilityLevel:survival }),
+        hpRegen: 10,
         adrenalineRegen: calculateAdrenalineRegen({ character, abilityLevel:survival }),
         unarmedDamage: calculateMeleeAttackDamage(UNARMED_DAMAGE_BASE, UNARMED_DAMAGE_PER_LEVEL, null, { character, totalLevel, abilityLevel:strength }),
         defense: calculateDefense({ character, totalLevel, abilityLevel:strength }),

@@ -25,8 +25,8 @@ const defaultEntityObj = {
     isHidden: true,
 };
 
-/** Default object for the zustand store */
-export const defaultCombatStore = {
+/** @constant {object} - Default object for the zustand store */
+export const DEFAULT_COMBAT_STORE = {
     entities: {},
     initiativeOrder: [],
     startingEntityKey: null,
@@ -34,7 +34,10 @@ export const defaultCombatStore = {
     turnCount: 0,
     backgroundTurnCount: 0,
     actionHistory: [],
-    attackSelected: null
+    attackSelected: null,
+
+    hasError: false,
+    message: null,
 }
 
 
@@ -66,7 +69,7 @@ const startCombat = (set, entitiesToSet, startingNarrative=null) => {
     
     // Go into our zustand `set` function and set up the start of combat
     set(() => ({ 
-        ...defaultCombatStore, 
+        ...DEFAULT_COMBAT_STORE, 
         entities, 
         initiativeOrder, 
         startingEntityKey: initiativeOrder[0],
@@ -313,12 +316,22 @@ export const useCombatStore = create((set) => ({
     //______________________________________________________________________________________
     // ===== Store Data =====
 
-    ...defaultCombatStore,
+    ...DEFAULT_COMBAT_STORE,
 
 
 
     //______________________________________________________________________________________
     // ===== Store Functions =====
+    set,
+    setError: (message) => {
+        console.error(message);
+        set(() => ({ hasError:true, message }));
+    },
+    resetError: () => set(() => ({ hasError:false, message:null })),
+
+
+
+
     setEntities: (entities) => set(() => ({ entities })),
     setAttackSelected: (attackSelected) => set(() => ({ attackSelected })),
     startCombat: (entitiesToSet, startingNarrative) => startCombat(set, entitiesToSet, startingNarrative),
