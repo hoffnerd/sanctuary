@@ -26,7 +26,7 @@ export default function SelectEntityButton({ className, entityKey, isFriendly })
     // ===== Store =====
 	const entities = useCombatStore((state) => state.entities);
 	const initiativeOrder = useCombatStore((state) => state.initiativeOrder);
-    const attackSelected = useCombatStore((state) => state.attackSelected);
+    const actionSelected = useCombatStore((state) => state.actionSelected);
     const setNextTurnState = useCombatStore((state) => state.setNextTurnState);
 
 
@@ -36,7 +36,6 @@ export default function SelectEntityButton({ className, entityKey, isFriendly })
 	const entityObj = entities[entityKey];
     const currentTurnEntityKey = initiativeOrder[0]
 	const currentTurnEntityObj = currentTurnEntityKey ? entities[currentTurnEntityKey] : null;
-    // const attackObj = attackSelected ? attacksLibrary[attackSelected] : null;
     const isOpposingForce = (entityObj.isFriendly && (!currentTurnEntityObj.isFriendly)) || ((!entityObj.isFriendly) && currentTurnEntityObj.isFriendly);
 
 
@@ -44,7 +43,7 @@ export default function SelectEntityButton({ className, entityKey, isFriendly })
     //______________________________________________________________________________________
     // ===== Component Return =====
 
-    if(!(attackSelected && isOpposingForce)) return;
+    if(!(actionSelected?.type === "attack" && isOpposingForce)) return;
 
     return (
         <div className={`${className} flex items-center ${isFriendly ? "justify-start" : "justify-end"}`}>

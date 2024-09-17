@@ -34,7 +34,10 @@ export const DEFAULT_COMBAT_STORE = {
     turnCount: 0,
     backgroundTurnCount: 0,
     actionHistory: [],
-    attackSelected: null,
+    actionSelected: null,
+
+    attackSelected: null, // @deprecated
+
 
     hasError: false,
     message: null,
@@ -328,6 +331,7 @@ export const useCombatStore = create((set) => ({
         set(() => ({ hasError:true, message }));
     },
     resetError: () => set(() => ({ hasError:false, message:null })),
+    setActionSelected: (actionSelected) => set(() => ({ actionSelected })),
 
 
 

@@ -1,9 +1,11 @@
 export const attacksLibrary = {
-    testAttack: {
-        id: "testAttack",
-        display: "Test Attack",
+    bat: {
+        id: "bat",
+        display: "Bat",
         targets: 1,
-        damage: 4,
+        damageBase: 5,
+        damagePerLevel: 1,
+        damageStrengthMultiplier: 0.5,
         narrative: ({actionTakerObj, targetObj, damage}) => [
             { 
                 className: `neonText neonTextGlow ${actionTakerObj.isFriendly ? "blue" : "red"}`, 
@@ -25,7 +27,9 @@ export const attacksLibrary = {
         id: "testMultiAttack",
         display: "Test Multi-Attack",
         targets: 4,
-        damage: 2,
+        damageBase: 4,
+        damagePerLevel: 0.25,
+        damageStrengthMultiplier: 0.5,
         narrative: ({actionTakerObj, targetObj, damage}) => [
             { 
                 className: `neonText neonTextGlow ${actionTakerObj.isFriendly ? "blue" : "red"}`, 

@@ -16,9 +16,6 @@ export const saveInterval = 300;
 /** @constant {number} - the amount of time before we auto run the the next narrative, if there are no choices in microseconds */
 export const nextNarrativeInterval = 2500; 
 
-/** @deprecated - use `MAX_ADRENALINE_POINTS` instead */
-export const maxAdrenalinePoints = MAX_ADRENALINE_POINTS; 
-
 
 
 //______________________________________________________________________________________
@@ -68,6 +65,9 @@ export const COMBAT_DEFAULT_FRIENDLY = {
 
 
 export const MAX_ADRENALINE_POINTS = 5
+
+/** @deprecated - use `MAX_ADRENALINE_POINTS` instead */
+export const maxAdrenalinePoints = MAX_ADRENALINE_POINTS; 
 
 
 

@@ -12,6 +12,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/shadcn/ui/
 import { attacksLibrary } from "@/data/game/attacks";
 // Other ----------------------------------------------------------------------------
 import { convertObjToArray, isArray, isObj } from "@/util";
+import useCombat from "@/hooks/useCombat";
 
 
 
@@ -29,8 +30,14 @@ export default function Actions(){
     // ===== Stores =====
 	const entities = useCombatStore((state) => state.entities);
 	const initiativeOrder = useCombatStore((state) => state.initiativeOrder);
-    const attackSelected = useCombatStore((state) => state.attackSelected);
-    const setAttackSelected = useCombatStore((state) => state.setAttackSelected);
+    const actionSelected = useCombatStore((state) => state.actionSelected);
+    const setActionSelected = useCombatStore((state) => state.setActionSelected);
+
+
+
+    //______________________________________________________________________________________
+    // ===== Hook =====
+    const { getActionObj } = useCombat();
 
     
 
@@ -44,7 +51,7 @@ export default function Actions(){
     // ===== Constants =====
     const entityKey = initiativeOrder[0]
 	const entityObj = entityKey ? entities[entityKey] : null;
-    const attackObj = attackSelected ? attacksLibrary[attackSelected] : null;
+    const actionObj = getActionObj(actionSelected)
 
 
 
@@ -57,15 +64,15 @@ export default function Actions(){
     //     </div>
     // )
 
-    if(isObj(attackObj)) return (
+    if(isObj(actionObj)) return (
         <div className="grid grid-cols-4 h-full">
             <div className="col-span-3 flex items-center justify-center text-center">
                 <div>
-                    <p className="text-lg">{attackObj.display}</p>
-                    <p className="text-md">Targets: {attackObj.targets}</p>
+                    <p className="text-lg">{actionObj.display}</p>
+                    <p className="text-md">Targets: {actionObj.targets}</p>
                 </div>
             </div>
-            <Button className="h-full" isRounded={false} variant="neonRed" onClick={()=>setAttackSelected(null)}>
+            <Button className="h-full" isRounded={false} variant="neonRed" onClick={()=>setActionSelected(null)}>
                 Cancel
             </Button>
         </div>
@@ -83,7 +90,11 @@ export default function Actions(){
                         <CommandList>
                             <CommandEmpty>No Attacks Found.</CommandEmpty>
                             {attacks.map(({ id, display }) => ((
-                                <CommandItem key={id} value={display} onSelect={()=>setAttackSelected(id)}>
+                                <CommandItem 
+                                    key={id} 
+                                    value={display}
+                                    onSelect={()=>setActionSelected({ id, type:"attack" })}
+                                >
                                     {display}
                                 </CommandItem>
                             )))}

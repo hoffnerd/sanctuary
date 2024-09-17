@@ -26,12 +26,13 @@ export default function CombatStarter({ saveFile }){
     //______________________________________________________________________________________
     // ===== Stores =====
     const startingEntityKey = useCombatStore((state) => state.startingEntityKey);
+    const initiativeOrder = useCombatStore((state) => state.initiativeOrder);
 
     
 
     //______________________________________________________________________________________
     // ===== Hooks =====
-    const { initializeCombat } = useCombat();
+    const { initializeCombat, startTurn } = useCombat();
 
     
 
@@ -43,6 +44,9 @@ export default function CombatStarter({ saveFile }){
         initializeCombat()
     }, [params, startingEntityKey, saveFile])
     
+    // useEffect(() => {
+    //     startTurn()
+    // }, [initiativeOrder])
 
     
     //______________________________________________________________________________________

@@ -56,7 +56,7 @@ export default function Commands({ saveFile }){
         },
         {
             key: "back",
-            display: <div>"Go back a Narrative"</div>,
+            display: "Go back a Narrative",
             action: () => {
                 let newNarrative = [ ...saveData.narrative ];
                 newNarrative.pop();

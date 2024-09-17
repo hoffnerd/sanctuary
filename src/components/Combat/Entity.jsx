@@ -72,7 +72,7 @@ export default function Entity({ className, entityKey }){
     // ===== Store =====
 	const entities = useCombatStore((state) => state.entities);
 	const initiativeOrder = useCombatStore((state) => state.initiativeOrder);
-    const attackSelected = useCombatStore((state) => state.attackSelected);
+    const actionSelected = useCombatStore((state) => state.actionSelected);
     const setNextTurnState = useCombatStore((state) => state.setNextTurnState);
 
 
@@ -82,7 +82,6 @@ export default function Entity({ className, entityKey }){
 	const entityObj = entities[entityKey];
     const currentTurnEntityKey = initiativeOrder[0]
 	const currentTurnEntityObj = currentTurnEntityKey ? entities[currentTurnEntityKey] : null;
-    // const attackObj = attackSelected ? attacksLibrary[attackSelected] : null;
     const isOpposingForce = (entityObj.isFriendly && (!currentTurnEntityObj.isFriendly)) || ((!entityObj.isFriendly) && currentTurnEntityObj.isFriendly);
     const classes = `${className} ${styles.entity} neonBorder neonBoxShadowGlow ${entityObj.isFriendly ? "blue" : "red"}`;
 
@@ -91,7 +90,7 @@ export default function Entity({ className, entityKey }){
     //______________________________________________________________________________________
     // ===== Component Return =====
  
-	if(attackSelected && isOpposingForce) return (
+	if(actionSelected?.type === "attack" && isOpposingForce) return (
 		<button 
             className={`${classes} hover:bg-accent hover:text-accent-foreground`}
             onClick={() => setNextTurnState("attack", { targetEntityKey:entityKey })}

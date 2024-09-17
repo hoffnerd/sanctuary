@@ -14,6 +14,7 @@ import { isArray, isObj } from "@/util";
 import { randomizeEntities } from "@/util/combat"
 import { shuffleArray } from "@/util/shuffleArray";
 import { calculateCharacterBuild } from "@/util/character";
+import { attacksLibrary } from "@/data/game/attacks";
 
 
 
@@ -24,7 +25,9 @@ import { calculateCharacterBuild } from "@/util/character";
 /**
  * 
  * @returns {{
- *  initializeCombat: () => void
+ *  initializeCombat: () => void;
+ *  startTurn: () => void;
+ *  getActionObj: () => object | null;
  * }}
  */
 export default function useCombat(){
@@ -53,7 +56,7 @@ export default function useCombat(){
     const { crew, party } = saveData;
 
     const encounterData = combatId && combatEncounterLibrary?.[combatId]
-
+    
 
 
     //______________________________________________________________________________________
@@ -118,14 +121,17 @@ export default function useCombat(){
     const startTurnBuffs = (initiativeOrder, entities) => {
         const turnTakerEntityId = initiativeOrder[0]
         const turnTakerEntity = entities[turnTakerEntityId]
+        console.log({ trace:"startTurn", turnTakerEntityId, turnTakerEntity })
 
         // Natural Health
-        const hpRegen = turnTakerEntity.hpRegen;
+        const hpRegen = turnTakerEntity.hpRegen + 10;
         const newHp = turnTakerEntity.hp + hpRegen;
 
         // Natural Adrenaline
-        const adrenalineRegen = turnTakerEntity.adrenalineRegen;
+        const adrenalineRegen = turnTakerEntity.adrenalineRegen + 5;
         const newAp = turnTakerEntity.ap + adrenalineRegen;
+
+        // This is probably where text will go 
         
         return {
             entities: { 
@@ -151,6 +157,16 @@ export default function useCombat(){
     })
 
 
+    const getActionObj = (actionSelected) => {
+        if(!actionSelected?.id) return null;
+        switch (actionSelected?.type) {
+            case "attack": return attacksLibrary[actionSelected.id]
+            default: return null;
+        }
+    }
+
+
+
     //______________________________________________________________________________________
     // ===== Combat Phase: Entity Select =====
 
@@ -173,6 +189,8 @@ export default function useCombat(){
     // ===== Hook Return =====
     return {
         initializeCombat,
+        startTurn,
+        getActionObj,
     }
 }
 
@@ -206,11 +224,11 @@ export default function useCombat(){
     - [] Is entity controlled or AI
         - [x] Controlled: Handled by the `Actions` panel, because this hook is only considered with what has happened, not possibilities.
         - [] AI: calculate best move (*)
-2. [] Entity Select - Select which entity(s) for this action to target.
+2. [x] Entity Select - Select which entity(s) for this action to target.
     - [] Should be handled by the `Actions` and `Battlefield` panels, because this hook is only considered with what has happened, not possibilities.
-        - [] Read the selected action's data
-        - [] If entity is controlled, render the action's data and cancel button in the action panel
-        - [] Render the buttons based on who can be targeted by the action
+        - [x] Read the selected action's data
+        - [x] If entity is controlled, render the action's data and cancel button in the action panel
+        - [x] Render the buttons based on who can be targeted by the action
         - [] Is entity controlled or AI
             - [] Controlled: wait for player input
             - [] AI: based on calculated best move, select target
