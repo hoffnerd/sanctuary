@@ -8,12 +8,12 @@ import { useReadSaveFile } from "@/rQuery/hooks/saveFile";
 import { DEFAULT_COMBAT_STORE, useCombatStore } from "@/stores/combat";
 // Data ---------------------------------------------------------------------------
 import { combatEncounterLibrary } from "@/data/combat/library";
-import { COMBAT_DEFAULT_FRIENDLY, DEFAULT_SAVE_DATA, DEFAULT_SAVE_FILE, MAX_ADRENALINE_POINTS } from "@/data/_config";
+import { CHANCE_TO_HIT_BASE, CHANCE_TO_HIT_INCREASE_PER_MISS, COMBAT_DEFAULT_FRIENDLY, DEFAULT_SAVE_DATA, DEFAULT_SAVE_FILE, MAX_ADRENALINE_POINTS } from "@/data/_config";
 // Other --------------------------------------------------------------------------
 import { isArray, isObj } from "@/util";
 import { randomizeEntities } from "@/util/combat"
 import { shuffleArray } from "@/util/shuffleArray";
-import { calculateCharacterBuild } from "@/util/character";
+import { calculateCharacterBuild, calculateMeleeAttackDamage } from "@/util/character";
 import { attacksLibrary } from "@/data/game/attacks";
 
 
@@ -166,16 +166,58 @@ export default function useCombat(){
     }
 
 
-
-    //______________________________________________________________________________________
-    // ===== Combat Phase: Entity Select =====
-
-
-
     
     //______________________________________________________________________________________
     // ===== Combat Phase: Execute Action =====
 
+    const calculateHitOrMiss = (actionObj, actionTakerEntity, numberOfMisses, targetEntity) => {
+        const chanceToHit = (
+            (CHANCE_TO_HIT_BASE + actionTakerEntity.level) // 5-25
+            + Math.floor(Math.random() * 26) // 0-25
+            + actionTakerEntity.accuracy
+            + (actionObj?.accuracy || 0)
+            + (CHANCE_TO_HIT_INCREASE_PER_MISS * numberOfMisses)
+        )
+    
+        // true = hit | false = miss
+        return chanceToHit > targetEntity.evasion
+    }
+    
+
+    const executeAction = () => set(
+        ({ entities, initiativeOrder, actionSelected, entitySelected, actionMisses }) => {
+            if(!(actionSelected && entitySelected)) return;
+
+            const actionObj = getActionObj(actionSelected);
+            const actionTakerEntity = entities[ initiativeOrder[0] ];
+            const numberOfMisses = (actionTakerEntity.isFriendly && actionMisses[ initiativeOrder[0] ]) || 0;
+            const targetEntity = entities[ entitySelected ];
+            const damage = calculateMeleeAttackDamage(
+                actionObj.damageBase, 
+                actionObj.damagePerLevel, 
+                actionObj.damageStrengthMultiplier, 
+                { character:actionTakerEntity }
+            )
+            let newEntities = structuredClone(entities);
+
+            if(actionSelected?.type === "attack"){
+                if(calculateHitOrMiss(actionObj, actionTakerEntity, numberOfMisses, targetEntity)){
+                    // Hit
+                    newEntities[entitySelected].hp = newEntities[entitySelected].hp - damage;
+
+                    // TODO: Multi-Target attacks
+
+                    return {
+                        
+                    }
+                } 
+
+                // Miss
+                
+            }
+
+        }
+    )
 
 
     

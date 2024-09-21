@@ -46,19 +46,6 @@ import { isArray, isObj } from ".";
 //______________________________________________________________________________________
 // ===== Utility Functions =====
 
-const EXAMPLE_calculateHitOrMiss = (actionTakerObj, weaponObj, targetObj, numberOfMisses, { BASE, RANDOM_RANGE, INCREASE_PER_MISS }) => {
-    const chanceToHit = (
-        (BASE + actionTakerObj.level) // 5-25
-        + RANDOM_RANGE // 0-25
-        + actionTakerObj.accuracy
-        + (weaponObj?.accuracy || 0)
-        + (INCREASE_PER_MISS * numberOfMisses)
-    )
-
-    // true = hit | false = miss
-    return chanceToHit > targetObj.evasion
-}
-
 /**
  * Gets the technical level to use in some calculations if a character is at level 0. Basically, check if we are at 
  * level zero BUT the character already has ability levels. If so, then get the technical level we should use for 
@@ -483,7 +470,7 @@ const calculateDefense = ({ character=null, totalLevel=null, abilityLevel=null, 
 
 /**
  * Calculates melee attack damage based on base damage, damage per level, strength multiplier, and character stats.
- * @param {number} baseDamage - int, represents the base amount of damage that the melee attack will deal. This value 
+ * @param {number} damageBase - int, represents the base amount of damage that the melee attack will deal. This value 
  * is added to the calculated damage based on the character's stats and level.
  * @param {number} damagePerLevel - int or float, represents the amount of damage that increases per level for the character. 
  * This value is multiplied by the character's total level to calculate the additional damage gained as the character levels up.
@@ -500,8 +487,8 @@ const calculateDefense = ({ character=null, totalLevel=null, abilityLevel=null, 
  * If not provided, will get from the given `character`.
  * @returns {number}
  */
-const calculateMeleeAttackDamage = (
-    baseDamage, 
+export const calculateMeleeAttackDamage = (
+    damageBase, 
     damagePerLevel, 
     damageStrengthMultiplier=null, 
     { character=null, totalLevel=null, abilityLevel=null, proficiency=null }
@@ -525,7 +512,7 @@ const calculateMeleeAttackDamage = (
     // Calculate the characters damage with given stats
     return Math.floor(
         // Starting base damage, plus...
-        baseDamage + (
+        damageBase + (
 
             // damage statically gained as a character levels up, multiplied by...
             (damagePerLevel * levelMultiplier) *

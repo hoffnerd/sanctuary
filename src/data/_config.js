@@ -63,11 +63,17 @@ export const COMBAT_DEFAULT_FRIENDLY = {
     isHidden: true,
 }
 
-
-export const MAX_ADRENALINE_POINTS = 5
+/** @constant {number} - how many adrenaline points one can have */
+export const MAX_ADRENALINE_POINTS = 5;
 
 /** @deprecated - use `MAX_ADRENALINE_POINTS` instead */
 export const maxAdrenalinePoints = MAX_ADRENALINE_POINTS; 
+
+/** @constant {number} - At level 0 how much of a chance you get to hit */
+export const CHANCE_TO_HIT_BASE = 5;
+
+/** @constant {number} - the percent to increase the chance to hit by for every miss */
+export const CHANCE_TO_HIT_INCREASE_PER_MISS = 0.01;
 
 
 

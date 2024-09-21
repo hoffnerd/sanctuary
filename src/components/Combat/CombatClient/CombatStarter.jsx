@@ -26,7 +26,9 @@ export default function CombatStarter({ saveFile }){
     //______________________________________________________________________________________
     // ===== Stores =====
     const startingEntityKey = useCombatStore((state) => state.startingEntityKey);
-    const initiativeOrder = useCombatStore((state) => state.initiativeOrder);
+    // const initiativeOrder = useCombatStore((state) => state.initiativeOrder);
+    const actionSelected = useCombatStore((state) => state.actionSelected);
+    const entitySelected = useCombatStore((state) => state.entitySelected);
 
     
 
@@ -47,6 +49,11 @@ export default function CombatStarter({ saveFile }){
     // useEffect(() => {
     //     startTurn()
     // }, [initiativeOrder])
+    
+    useEffect(() => {
+        if(!(actionSelected && entitySelected)) return;
+        console.log({ trace:"CombatStarter > useEffect", actionSelected, entitySelected })
+    }, [actionSelected, entitySelected])
 
     
     //______________________________________________________________________________________

@@ -73,7 +73,7 @@ export default function Entity({ className, entityKey }){
 	const entities = useCombatStore((state) => state.entities);
 	const initiativeOrder = useCombatStore((state) => state.initiativeOrder);
     const actionSelected = useCombatStore((state) => state.actionSelected);
-    const setNextTurnState = useCombatStore((state) => state.setNextTurnState);
+    const setEntitySelected = useCombatStore((state) => state.setEntitySelected);
 
 
 
@@ -93,7 +93,8 @@ export default function Entity({ className, entityKey }){
 	if(actionSelected?.type === "attack" && isOpposingForce) return (
 		<button 
             className={`${classes} hover:bg-accent hover:text-accent-foreground`}
-            onClick={() => setNextTurnState("attack", { targetEntityKey:entityKey })}
+            onClick={() => setEntitySelected(entityKey)}
+            // onClick={() => setNextTurnState("attack", { targetEntityKey:entityKey })}
         >
             <EntityContent entityObj={entityObj} />
 		</button>
